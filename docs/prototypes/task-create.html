@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>New task | Task Management prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="assets/prototype.css" rel="stylesheet">
+<script src="assets/prototype.js"></script>
+</head>
+<body data-nav="projects.html" data-roles="junior senior manager" data-states="loaded invalid saving" data-views="task:Task|subtask:Sub-task" data-view-label="Creating a">
+<main>
+  <div class="tm-crumb"><a href="projects.html">Projects</a> / <a href="project-tasks.html">Warehouse barcode rollout</a></div>
+  <div class="tm-page-head">
+    <div class="tm-page-title">
+      <h1 data-view="task">New task</h1>
+      <h1 data-view="subtask">New sub-task</h1>
+    </div>
+  </div>
+
+  <div class="tm-banner is-danger" id="errSummary" role="alert" hidden>
+    <i class="bi bi-exclamation-octagon" aria-hidden="true"></i>
+    <div><strong>The task was not created.</strong> Fix the fields marked below.</div>
+  </div>
+
+  <form id="createForm" novalidate>
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <section class="tm-panel tm-panel-pad">
+          <div class="tm-banner is-info mb-4" data-view="subtask">
+            <i class="bi bi-diagram-2" aria-hidden="true"></i>
+            <div data-role="manager senior">Sub-task of <a href="task-detail.html?view=inprogress">Configure barcode scanners for Zone B</a>. The parent is due on 20 Nov 2026.</div>
+            <div data-role="junior">Sub-task of <a href="task-detail.html?view=todo">Map Zone C aisle numbers</a>, a task you created. The parent is due on 2 Dec 2026.</div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="title">Title</label>
+            <input class="form-control" id="title" maxlength="200" aria-describedby="titleHelp titleErr">
+            <div class="form-text" id="titleHelp">The title cannot change after the task is created.</div>
+            <div class="invalid-feedback" id="titleErr">Enter a title.</div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="desc">Description <span class="tm-muted fw-normal">(optional)</span></label>
+            <textarea class="form-control" id="desc" rows="4"></textarea>
+          </div>
+          <div class="row g-3">
+            <div class="col-sm-6" data-view="task">
+              <label class="form-label" for="prio">Priority</label>
+              <select class="form-select" id="prio">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+                <option value="urgent">Urgent</option>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="due">Due date <span class="tm-muted fw-normal">(optional)</span></label>
+              <input class="form-control" type="date" id="due">
+              <div class="form-text" data-view="subtask" data-role="manager senior">On or before 20 Nov 2026.</div>
+              <div class="form-text" data-view="subtask" data-role="junior">On or before 2 Dec 2026.</div>
+              <div class="invalid-feedback" id="dueErr">A sub-task cannot be due after its parent.</div>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label" for="assignee" data-role="manager senior">Assignee</label>
+              <select class="form-select" id="assignee" data-role="manager senior">
+                <option>Youssef Samir</option>
+                <option>Salma Ibrahim</option>
+                <option>Hany Mostafa</option>
+                <option>Tarek Nabil</option>
+                <option>Mona Adel</option>
+              </select>
+              <span class="form-label d-block" data-role="junior">Assignee</span>
+              <span data-role="junior">Youssef Samir (you)</span>
+              <div class="form-text" data-role="junior">Juniors create tasks only for themselves.</div>
+              <div class="form-text" data-role="manager senior">Only Project members are listed.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-lg-5">
+        <section class="tm-panel tm-panel-pad" aria-labelledby="apTitle">
+          <h2 class="tm-h3 mb-1" id="apTitle">Approvers</h2>
+          <p class="tm-muted tm-small mb-3" id="apHint"></p>
+          <ol class="tm-approver-list" id="apList" aria-label="Approvers in order"></ol>
+          <div class="d-flex gap-2">
+            <label class="visually-hidden" for="apPick">Add an approver</label>
+            <select class="form-select" id="apPick"></select>
+            <button class="btn btn-quiet text-nowrap" type="button" id="apAdd">Add</button>
+          </div>
+          <div class="form-text">You can add Managers, or Seniors who are members of this Project. You and the assignee cannot approve.</div>
+          <div class="invalid-feedback" id="apErr"></div>
+          <div class="tm-start-preview mt-3" id="startPreview" aria-live="polite"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="d-flex flex-wrap gap-2 mt-4">
+      <button class="btn btn-primary" type="submit" id="submitBtn" data-state="loaded invalid"><span data-view="task">Create task</span><span data-view="subtask">Create sub-task</span></button>
+      <button class="btn btn-primary" type="button" disabled data-state="saving"><span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Creating</button>
+      <a class="btn btn-quiet" href="project-tasks.html">Cancel</a>
+    </div>
+  </form>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function () {
+  var esc = TM.esc;
+  var PEOPLE = [
+    { name: 'Karim Hassan', who: 'Manager, Operations (Department Manager)', kind: 'manager' },
+    { name: 'Laila Mansour', who: 'Manager, Engineering', kind: 'manager' },
+    { name: 'Hossam Aly', who: 'Manager', kind: 'manager' },
+    { name: 'Mona Adel', who: 'Senior, member', kind: 'senior' },
+    { name: 'Tarek Nabil', who: 'Senior, member', kind: 'senior' }
+  ];
+  var SENIORS = ['Mona Adel', 'Tarek Nabil'];
+  var approvers = [];
+  var touched = false;
+
+  function me() { return TM.user().name; }
+  function assignee() { return TM.role === 'junior' ? me() : document.getElementById('assignee').value; }
+  function person(n) { return PEOPLE.filter(function (p) { return p.name === n; })[0]; }
+  function seniorToSenior() { return TM.role === 'senior' && SENIORS.indexOf(assignee()) !== -1 && assignee() !== me(); }
+
+  function hint() {
+    if (TM.role === 'junior') return 'Pick at least one approver. They decide in the order shown.';
+    if (seniorToSenior()) return 'You are assigning this to another Senior, so Karim Hassan, the Department Manager, must be one of the approvers.';
+    return 'Optional. With no approvers, the task starts as To do.';
+  }
+
+  function render() {
+    var a = assignee();
+    var removed = approvers.filter(function (n) { return n === a || n === me(); });
+    if (removed.length) {
+      approvers = approvers.filter(function (n) { return removed.indexOf(n) === -1; });
+      TM.toast(removed[0] + ' was removed from the approvers. The assignee and the creator cannot approve.', 'danger');
+    }
+    document.getElementById('apHint').textContent = hint();
+    document.getElementById('apList').innerHTML = approvers.map(function (n, i) {
+      var p = person(n);
+      return '<li><span class="tm-step-num" aria-hidden="true">' + (i + 1) + '</span><span class="min-w-0"><strong class="d-block fw-semibold">' + esc(n) + '</strong><span class="tm-muted tm-small">' + esc(p.who) + '</span></span>' +
+        '<span class="d-flex gap-1"><button class="btn btn-quiet btn-sm" type="button" data-up="' + i + '"' + (i === 0 ? ' disabled' : '') + ' aria-label="Move ' + esc(n) + ' up"><i class="bi bi-arrow-up" aria-hidden="true"></i></button>' +
+        '<button class="btn btn-quiet btn-sm" type="button" data-down="' + i + '"' + (i === approvers.length - 1 ? ' disabled' : '') + ' aria-label="Move ' + esc(n) + ' down"><i class="bi bi-arrow-down" aria-hidden="true"></i></button>' +
+        '<button class="btn btn-quiet btn-sm" type="button" data-rm="' + i + '" aria-label="Remove ' + esc(n) + '"><i class="bi bi-x-lg" aria-hidden="true"></i></button></span></li>';
+    }).join('');
+    var options = PEOPLE.filter(function (p) { return p.name !== me() && p.name !== a && approvers.indexOf(p.name) === -1; });
+    document.getElementById('apPick').innerHTML = options.length ? options.map(function (p) { return '<option value="' + esc(p.name) + '">' + esc(p.name) + ', ' + esc(p.who) + '</option>'; }).join('') : '<option value="">Nobody else can approve</option>';
+    document.getElementById('apAdd').disabled = !options.length;
+    var pv = document.getElementById('startPreview');
+    pv.innerHTML = approvers.length ?
+      '<span class="tm-status is-pending">Pending approval</span><span>It starts here. ' + esc(approvers[0]) + ' is asked first.</span>' :
+      '<span class="tm-status is-todo">To do</span><span>It starts here. No approval needed.</span>';
+    if (touched) validate();
+  }
+
+  function validate() {
+    var ok = true;
+    var t = document.getElementById('title');
+    var bad = !t.value.trim();
+    t.classList.toggle('is-invalid', bad);
+    if (bad) ok = false;
+    var due = document.getElementById('due');
+    var max = TM.view === 'subtask' ? (TM.role === 'junior' ? '2026-12-02' : '2026-11-20') : null;
+    var dueBad = !!(max && due.value && due.value > max);
+    due.classList.toggle('is-invalid', dueBad);
+    if (dueBad) ok = false;
+    var err = document.getElementById('apErr');
+    var msg = '';
+    if (TM.role === 'junior' && !approvers.length) msg = 'Pick at least one approver.';
+    else if (seniorToSenior() && approvers.indexOf('Karim Hassan') === -1) msg = 'Add Karim Hassan, the Department Manager, as an approver.';
+    err.textContent = msg;
+    err.classList.toggle('d-block', !!msg);
+    if (msg) ok = false;
+    document.getElementById('errSummary').hidden = ok;
+    return ok;
+  }
+
+  document.getElementById('apAdd').addEventListener('click', function () {
+    var v = document.getElementById('apPick').value;
+    if (v) { approvers.push(v); render(); }
+  });
+  document.getElementById('apList').addEventListener('click', function (e) {
+    var up = e.target.closest('[data-up]'), down = e.target.closest('[data-down]'), rm = e.target.closest('[data-rm]');
+    var i, tmp;
+    if (up) { i = +up.getAttribute('data-up'); tmp = approvers[i - 1]; approvers[i - 1] = approvers[i]; approvers[i] = tmp; }
+    if (down) { i = +down.getAttribute('data-down'); tmp = approvers[i + 1]; approvers[i + 1] = approvers[i]; approvers[i] = tmp; }
+    if (rm) approvers.splice(+rm.getAttribute('data-rm'), 1);
+    if (up || down || rm) render();
+  });
+  document.getElementById('assignee').addEventListener('change', render);
+  document.getElementById('title').addEventListener('input', function () { if (touched) validate(); });
+  document.getElementById('createForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    touched = true;
+    if (!validate()) { TM.setState('invalid'); return; }
+    TM.setState('saving');
+    setTimeout(function () { location.href = TM.view === 'subtask' ? 'task-detail.html?view=inprogress' : (approvers.length ? 'task-detail.html?view=pending' : 'task-detail.html?view=todo'); }, 900);
+  });
+
+  TM.onChange(function (s) {
+    if (s.state === 'invalid' && !touched) { touched = true; document.getElementById('title').value = ''; }
+    if (s.state === 'loaded') { touched = false; document.getElementById('errSummary').hidden = true; document.querySelectorAll('.is-invalid').forEach(function (el) { el.classList.remove('is-invalid'); }); document.getElementById('apErr').classList.remove('d-block'); }
+    render();
+  });
+})();
+</script>
+</body>
+</html>

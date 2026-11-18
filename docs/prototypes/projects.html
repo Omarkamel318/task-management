@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects | Task Management prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="assets/prototype.css" rel="stylesheet">
+<script src="assets/prototype.js"></script>
+</head>
+<body data-nav="projects.html" data-roles="manager senior junior admin" data-states="loaded loading empty error">
+<main>
+  <div class="tm-page-head">
+    <div class="tm-page-title">
+      <h1>Projects</h1>
+      <p data-role="manager">Projects in Operations and Finance, the Departments you manage.</p>
+      <p data-role="senior junior">Projects you are a member of.</p>
+      <p data-role="admin">All Projects in the company. You can view them but not change them.</p>
+    </div>
+    <button class="btn btn-primary" type="button" data-role="manager senior" data-bs-toggle="modal" data-bs-target="#createProject"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>New Project</button>
+  </div>
+
+  <section class="tm-panel" aria-label="Project list">
+    <div class="tm-filters" data-state="loaded">
+      <label class="visually-hidden" for="fStatus">Status</label>
+      <select class="form-select" id="fStatus">
+        <option value="active">Active</option>
+        <option value="archived">Archived</option>
+        <option value="all">All statuses</option>
+      </select>
+      <label class="visually-hidden" for="fDept" data-role="manager admin">Department</label>
+      <select class="form-select" id="fDept" data-role="manager admin">
+        <option value="">All Departments</option>
+        <option data-role="admin">Engineering</option>
+        <option>Finance</option>
+        <option>Operations</option>
+      </select>
+    </div>
+
+    <div class="table-responsive" data-state="loaded">
+      <table class="table tm-table table-hover">
+        <thead>
+          <tr><th scope="col">Project</th><th scope="col">Department</th><th scope="col">Status</th><th scope="col" class="text-end">Members</th><th scope="col" class="text-end">Open tasks</th></tr>
+        </thead>
+        <tbody id="projectRows">
+          <tr data-status="active" data-role="manager senior junior admin">
+            <td><a class="tm-title-link" href="project-tasks.html">Warehouse barcode rollout</a><span class="tm-sub">Scanners and labels for all three warehouse zones</span></td>
+            <td>Operations</td><td><span class="tm-status is-active">Active</span></td><td class="text-end tm-num">5</td><td class="text-end tm-num">8</td>
+          </tr>
+          <tr data-status="active" data-role="manager senior admin">
+            <td><a class="tm-title-link" href="project-tasks.html">Supplier contract renewals</a><span class="tm-sub">Contracts that end before March 2027</span></td>
+            <td>Operations</td><td><span class="tm-status is-active">Active</span></td><td class="text-end tm-num">3</td><td class="text-end tm-num">4</td>
+          </tr>
+          <tr data-status="active" data-role="manager admin">
+            <td><a class="tm-title-link" href="project-tasks.html">Payroll system upgrade</a><span class="tm-sub">Move payroll to the new HR platform</span></td>
+            <td>Finance</td><td><span class="tm-status is-active">Active</span></td><td class="text-end tm-num">6</td><td class="text-end tm-num">12</td>
+          </tr>
+          <tr data-status="active" data-role="admin">
+            <td><a class="tm-title-link" href="project-tasks.html">Customer portal redesign</a><span class="tm-sub">New order tracking pages</span></td>
+            <td>Engineering</td><td><span class="tm-status is-active">Active</span></td><td class="text-end tm-num">7</td><td class="text-end tm-num">15</td>
+          </tr>
+          <tr data-status="archived" data-role="manager admin">
+            <td><a class="tm-title-link" href="project-tasks.html?view=archived">2026 budget review</a><span class="tm-sub">Archived on 30 Oct 2026</span></td>
+            <td>Finance</td><td><span class="tm-status is-archived">Archived</span></td><td class="text-end tm-num">4</td><td class="text-end tm-num">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div data-state="loading" aria-busy="true" aria-label="Loading Projects">
+      <div class="tm-skel-row"><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span><span class="tm-skel w-30"></span></div>
+      <div class="tm-skel-row"><span class="tm-skel w-90"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span><span class="tm-skel w-30"></span></div>
+      <div class="tm-skel-row"><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span><span class="tm-skel w-30"></span></div>
+    </div>
+
+    <div class="tm-empty" data-state="empty">
+      <svg class="tm-empty-art" width="96" height="28" viewBox="0 0 96 28" aria-hidden="true"><line x1="14" y1="14" x2="82" y2="14"/><circle cx="14" cy="14" r="10"/><circle cx="48" cy="14" r="10"/><circle cx="82" cy="14" r="10"/></svg>
+      <div data-role="manager senior">
+        <h2>No Projects yet</h2>
+        <p>Create a Project, add members, and start planning tasks.</p>
+        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#createProject">New Project</button>
+      </div>
+      <div data-role="junior">
+        <h2>You are not in any Project yet</h2>
+        <p>A Senior or your Manager adds you to a Project. It shows here after that.</p>
+      </div>
+      <div data-role="admin">
+        <h2>No Projects yet</h2>
+        <p>Managers and Seniors create Projects. They show here after that.</p>
+      </div>
+    </div>
+
+    <div class="tm-error" data-state="error" role="alert">
+      <i class="bi bi-wifi-off" aria-hidden="true"></i>
+      <div>
+        <h2>Projects did not load</h2>
+        <p>The server did not answer. Check your connection, then try again.</p>
+        <button class="btn btn-quiet" type="button" data-tm-set-state="loaded">Try again</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal fade" id="createProject" tabindex="-1" aria-labelledby="createProjectTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content" id="createProjectForm" novalidate>
+      <div class="modal-header">
+        <h2 class="modal-title" id="createProjectTitle">New Project</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label class="form-label" for="pName">Name</label>
+          <input class="form-control" id="pName" required>
+          <div class="invalid-feedback">Enter a name for the Project.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="pDesc">Description <span class="tm-muted fw-normal">(optional)</span></label>
+          <textarea class="form-control" id="pDesc" rows="3"></textarea>
+        </div>
+        <div class="mb-1" data-role="manager">
+          <label class="form-label" for="pDept">Department</label>
+          <select class="form-select" id="pDept">
+            <option>Operations</option>
+            <option>Finance</option>
+          </select>
+          <div class="form-text">You can pick one of the Departments you manage. You are not added as a member.</div>
+        </div>
+        <div class="mb-1" data-role="senior">
+          <span class="form-label d-block">Department</span>
+          <span>Operations</span>
+          <div class="form-text">Your Projects are in your own Department. You become a member automatically.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-quiet" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create Project</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function () {
+  function filter() {
+    var v = document.getElementById('fStatus').value;
+    document.querySelectorAll('#projectRows tr').forEach(function (tr) {
+      var roleOk = tr.getAttribute('data-role').split(' ').indexOf(TM.role) !== -1;
+      tr.hidden = !roleOk || (v !== 'all' && tr.getAttribute('data-status') !== v);
+    });
+  }
+  document.getElementById('fStatus').addEventListener('change', filter);
+  TM.onChange(filter);
+  document.getElementById('createProjectForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var name = document.getElementById('pName');
+    if (!name.value.trim()) { name.classList.add('is-invalid'); name.focus(); return; }
+    name.classList.remove('is-invalid');
+    bootstrap.Modal.getInstance(document.getElementById('createProject')).hide();
+    TM.toast('Project created.');
+    setTimeout(function () { location.href = 'project-tasks.html'; }, 700);
+  });
+})();
+</script>
+</body>
+</html>

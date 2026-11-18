@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My tasks | Task Management prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="assets/prototype.css" rel="stylesheet">
+<script src="assets/prototype.js"></script>
+</head>
+<body data-nav="my-tasks.html" data-roles="junior senior" data-states="loaded loading empty error">
+<main>
+  <div class="tm-page-head">
+    <div class="tm-page-title">
+      <h1>My tasks</h1>
+      <p>Tasks and sub-tasks assigned to you, across all your Projects.</p>
+    </div>
+  </div>
+
+  <section class="tm-panel" aria-label="My tasks">
+    <div class="tm-filters" data-state="loaded">
+      <label class="visually-hidden" for="fShow">Show</label>
+      <select class="form-select" id="fShow">
+        <option value="open">Open tasks</option>
+        <option value="done">Done</option>
+        <option value="all">All</option>
+      </select>
+      <label class="visually-hidden" for="fProject">Project</label>
+      <select class="form-select" id="fProject">
+        <option value="">All Projects</option>
+        <option>Warehouse barcode rollout</option>
+        <option data-role="senior">Supplier contract renewals</option>
+      </select>
+      <div class="form-check ms-1">
+        <input class="form-check-input" type="checkbox" id="fOverdue">
+        <label class="form-check-label" for="fOverdue">Overdue only</label>
+      </div>
+    </div>
+
+    <div class="table-responsive" data-state="loaded">
+      <table class="table tm-table table-hover">
+        <thead><tr><th scope="col">Task</th><th scope="col">Project</th><th scope="col">Priority</th><th scope="col">Status</th><th scope="col">Due date</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="tm-muted px-4 py-3 mb-0" id="none" hidden>No tasks match these filters.</p>
+
+    <div data-state="loading" aria-busy="true" aria-label="Loading your tasks">
+      <div class="tm-skel-row"><span class="tm-skel w-90"></span><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span></div>
+      <div class="tm-skel-row"><span class="tm-skel w-70"></span><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span></div>
+      <div class="tm-skel-row"><span class="tm-skel w-50"></span><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span></div>
+    </div>
+
+    <div class="tm-empty" data-state="empty">
+      <svg class="tm-empty-art" width="96" height="28" viewBox="0 0 96 28" aria-hidden="true"><line x1="14" y1="14" x2="82" y2="14"/><circle cx="14" cy="14" r="10"/><circle cx="48" cy="14" r="10"/><circle cx="82" cy="14" r="10"/></svg>
+      <h2>Nothing assigned to you</h2>
+      <p data-role="senior">Tasks show here when you or someone else assigns them to you.</p>
+      <p data-role="junior">Create a task for yourself in one of your Projects, or wait for a Senior to assign one.</p>
+      <a class="btn btn-primary" href="projects.html">Go to Projects</a>
+    </div>
+
+    <div class="tm-error" data-state="error" role="alert">
+      <i class="bi bi-wifi-off" aria-hidden="true"></i>
+      <div>
+        <h2>Your tasks did not load</h2>
+        <p>The server did not answer. Check your connection, then try again.</p>
+        <button class="btn btn-quiet" type="button" data-tm-set-state="loaded">Try again</button>
+      </div>
+    </div>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function () {
+  var esc = TM.esc;
+  var LABEL = { pending: 'Pending approval', todo: 'To do', inprogress: 'In progress', done: 'Done' };
+  var CLS = { pending: 'is-pending', todo: 'is-todo', inprogress: 'is-progress', done: 'is-done' };
+  var PRIO = { low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' };
+  var DATA = {
+    junior: [
+      { t: 'Configure barcode scanners for Zone B', p: 'Warehouse barcode rollout', pr: 'high', s: 'inprogress', due: '20 Nov 2026', link: 'task-detail.html?view=inprogress' },
+      { t: 'Mount scanner cradles at 6 stations', parent: 'Configure barcode scanners for Zone B', p: 'Warehouse barcode rollout', s: 'done', due: '18 Nov 2026', link: 'subtask-detail.html?view=done' },
+      { t: 'Print test labels for each zone', parent: 'Configure barcode scanners for Zone B', p: 'Warehouse barcode rollout', s: 'todo', due: '20 Nov 2026', link: 'subtask-detail.html?view=todo' },
+      { t: 'Label all shelving in Zone A', p: 'Warehouse barcode rollout', pr: 'medium', s: 'pending', due: '25 Nov 2026', link: 'task-detail.html?view=pending' },
+      { t: 'Map Zone C aisle numbers', p: 'Warehouse barcode rollout', pr: 'low', s: 'todo', due: '2 Dec 2026', link: 'task-detail.html?view=todo' }
+    ],
+    senior: [
+      { t: 'Renew the forklift service contract', p: 'Supplier contract renewals', pr: 'urgent', s: 'inprogress', due: '12 Nov 2026', overdue: 'Overdue by 5 days', link: 'task-detail.html?view=inprogress' },
+      { t: 'Write the rollout checklist', p: 'Warehouse barcode rollout', pr: 'medium', s: 'todo', due: null, link: 'task-detail.html?view=todo' },
+      { t: 'Compare three cleaning suppliers', p: 'Supplier contract renewals', pr: 'medium', s: 'todo', due: '30 Nov 2026', link: 'task-detail.html?view=todo' },
+      { t: 'Order 40 replacement scanner batteries', p: 'Warehouse barcode rollout', pr: 'low', s: 'done', due: '10 Nov 2026', link: 'task-detail.html?view=done' }
+    ]
+  };
+  function render() {
+    var show = document.getElementById('fShow').value, proj = document.getElementById('fProject').value, od = document.getElementById('fOverdue').checked;
+    var list = (DATA[TM.role] || []).filter(function (r) {
+      var open = r.s !== 'done';
+      return (show === 'all' || (show === 'open' ? open : !open)) && (!proj || r.p === proj) && (!od || r.overdue);
+    });
+    document.getElementById('rows').innerHTML = list.map(function (r) {
+      return '<tr><td><a class="tm-title-link" href="' + r.link + '">' + esc(r.t) + '</a>' + (r.parent ? '<span class="tm-sub">Sub-task of ' + esc(r.parent) + '</span>' : '') + '</td><td>' + esc(r.p) + '</td>' +
+        '<td>' + (r.pr ? '<span class="tm-priority is-' + r.pr + '">' + PRIO[r.pr] + '</span>' : '<span class="tm-muted">Sub-task</span>') + '</td>' +
+        '<td><span class="tm-status ' + CLS[r.s] + '">' + LABEL[r.s] + '</span></td>' +
+        '<td>' + (r.due ? '<span class="tm-due">' + r.due + '</span>' : '<span class="tm-muted">No due date</span>') + (r.overdue ? '<span class="tm-overdue d-flex mt-1"><i class="bi bi-alarm" aria-hidden="true"></i>' + r.overdue + '</span>' : '') + '</td></tr>';
+    }).join('');
+    if (TM.state === 'loaded') document.getElementById('none').hidden = list.length > 0;
+    else document.getElementById('none').hidden = true;
+  }
+  ['fShow', 'fProject', 'fOverdue'].forEach(function (id) { document.getElementById(id).addEventListener('change', render); });
+  TM.onChange(render);
+})();
+</script>
+</body>
+</html>

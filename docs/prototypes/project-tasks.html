@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project tasks | Task Management prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="assets/prototype.css" rel="stylesheet">
+<script src="assets/prototype.js"></script>
+</head>
+<body data-nav="projects.html" data-roles="manager senior junior admin" data-states="loaded loading empty filtered error" data-views="active:Active Project|archived:Archived Project" data-view-label="Project status">
+<main>
+  <div class="tm-crumb"><a href="projects.html">Projects</a></div>
+  <div class="tm-page-head">
+    <div class="tm-page-title">
+      <h1>Warehouse barcode rollout</h1>
+      <p>Operations <span class="ms-2 tm-status is-active" data-view="active">Active</span><span class="ms-2 tm-status is-archived" data-view="archived">Archived</span></p>
+    </div>
+    <div class="tm-actionbar" data-view="active">
+      <button class="btn btn-quiet" type="button" data-role="manager" data-tm-kind="danger" data-tm-toast="This Project still has 8 open tasks. Finish or cancel them before you archive it."><i class="bi bi-archive me-1" aria-hidden="true"></i>Archive Project</button>
+      <a class="btn btn-primary" href="task-create.html" data-role="manager senior junior"><i class="bi bi-plus-lg me-1" aria-hidden="true"></i>New task</a>
+    </div>
+  </div>
+
+  <div class="tm-banner" data-view="archived">
+    <i class="bi bi-archive" aria-hidden="true"></i>
+    <div>This Project is archived. You can open its tasks, but nobody can change them.</div>
+  </div>
+
+  <nav class="tm-tabs" aria-label="Project sections">
+    <a href="project-tasks.html" aria-current="page">Tasks</a>
+    <a href="project-members.html">Members</a>
+  </nav>
+
+  <div class="d-flex flex-wrap align-items-center gap-2 mb-3" data-state="loaded filtered">
+    <div class="tm-seg" role="group" aria-label="Task layout">
+      <button type="button" id="btnTable" aria-pressed="true"><i class="bi bi-list-ul" aria-hidden="true"></i>Table</button>
+      <button type="button" id="btnBoard" aria-pressed="false"><i class="bi bi-kanban" aria-hidden="true"></i>Board</button>
+    </div>
+    <span class="tm-muted tm-small ms-sm-2" id="boardHint" hidden>Rejected and cancelled tasks are hidden here. Use the table to find them.</span>
+  </div>
+
+  <section class="tm-panel" id="tablePanel" aria-label="Tasks table">
+    <div class="tm-filters" data-state="loaded filtered">
+      <div class="tm-search">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <label class="visually-hidden" for="fSearch">Search by title</label>
+        <input class="form-control" id="fSearch" type="search" placeholder="Search by title">
+      </div>
+      <label class="visually-hidden" for="fStatus">Status</label>
+      <select class="form-select" id="fStatus">
+        <option value="">All statuses</option>
+        <option value="pending">Pending approval</option>
+        <option value="todo">To do</option>
+        <option value="inprogress">In progress</option>
+        <option value="done">Done</option>
+        <option value="rejected">Rejected</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <label class="visually-hidden" for="fPrio">Priority</label>
+      <select class="form-select" id="fPrio">
+        <option value="">All priorities</option>
+        <option value="urgent">Urgent</option>
+        <option value="high">High</option>
+        <option value="medium">Medium</option>
+        <option value="low">Low</option>
+      </select>
+      <label class="visually-hidden" for="fAssignee">Assignee</label>
+      <select class="form-select" id="fAssignee">
+        <option value="">All assignees</option>
+        <option>Mona Adel</option>
+        <option>Tarek Nabil</option>
+        <option>Youssef Samir</option>
+        <option>Salma Ibrahim</option>
+      </select>
+      <div class="form-check ms-1">
+        <input class="form-check-input" type="checkbox" id="fOverdue">
+        <label class="form-check-label" for="fOverdue">Overdue only</label>
+      </div>
+    </div>
+
+    <div class="table-responsive" data-state="loaded" id="tableWrap">
+      <table class="table tm-table table-hover">
+        <thead>
+          <tr><th scope="col">Task</th><th scope="col">Assignee</th><th scope="col">Priority</th><th scope="col">Status</th><th scope="col">Due date</th></tr>
+        </thead>
+        <tbody id="taskRows"></tbody>
+      </table>
+    </div>
+
+    <div class="tm-empty" id="noResults" data-state="loaded filtered">
+      <h2>No tasks match these filters</h2>
+      <p>Change the filters or clear them to see all tasks.</p>
+      <button class="btn btn-quiet" type="button" id="clearFilters">Clear filters</button>
+    </div>
+
+    <div class="tm-pager" data-state="loaded" id="pager">
+      <span class="tm-num" id="pagerText">Showing 1 to 11 of 11 tasks</span>
+      <nav aria-label="Task pages">
+        <ul class="pagination pagination-sm">
+          <li class="page-item disabled"><span class="page-link">Previous</span></li>
+          <li class="page-item active" aria-current="page"><span class="page-link">1</span></li>
+          <li class="page-item disabled"><span class="page-link">Next</span></li>
+        </ul>
+      </nav>
+    </div>
+
+    <div data-state="loading" aria-busy="true" aria-label="Loading tasks">
+      <div class="tm-skel-row"><span class="tm-skel w-90"></span><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span></div>
+      <div class="tm-skel-row"><span class="tm-skel w-70"></span><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span></div>
+      <div class="tm-skel-row"><span class="tm-skel w-50"></span><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span></div>
+      <div class="tm-skel-row"><span class="tm-skel w-90"></span><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span></div>
+    </div>
+
+    <div class="tm-empty" data-state="empty">
+      <svg class="tm-empty-art" width="96" height="28" viewBox="0 0 96 28" aria-hidden="true"><line x1="14" y1="14" x2="82" y2="14"/><circle cx="14" cy="14" r="10"/><circle cx="48" cy="14" r="10"/><circle cx="82" cy="14" r="10"/></svg>
+      <h2>No tasks in this Project yet</h2>
+      <p data-role="manager senior">Create the first task and assign it to a member.</p>
+      <p data-role="junior">Create a task for yourself. Pick who approves it.</p>
+      <p data-role="admin">Tasks show here when members create them.</p>
+      <a class="btn btn-primary" href="task-create.html" data-role="manager senior junior" data-view="active">New task</a>
+    </div>
+
+    <div class="tm-error" data-state="error" role="alert">
+      <i class="bi bi-wifi-off" aria-hidden="true"></i>
+      <div>
+        <h2>Tasks did not load</h2>
+        <p>The server did not answer. Check your connection, then try again.</p>
+        <button class="btn btn-quiet" type="button" data-tm-set-state="loaded">Try again</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="boardPanel" aria-label="Tasks board" hidden>
+    <div class="tm-board" id="board"></div>
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function () {
+  var LABEL = { pending: 'Pending approval', todo: 'To do', inprogress: 'In progress', done: 'Done', rejected: 'Rejected', cancelled: 'Cancelled' };
+  var CLS = { pending: 'is-pending', todo: 'is-todo', inprogress: 'is-progress', done: 'is-done', rejected: 'is-rejected', cancelled: 'is-cancelled' };
+  var PRIO = { low: 'Low', medium: 'Medium', high: 'High', urgent: 'Urgent' };
+  var COLS = ['pending', 'todo', 'inprogress', 'done'];
+  var tasks = [
+    { id: 1, title: 'Configure barcode scanners for Zone B', assignee: 'Youssef Samir', prio: 'high', status: 'inprogress', due: '20 Nov 2026', subs: '2 of 3 sub-tasks done', openSubs: true },
+    { id: 2, title: 'Label all shelving in Zone A', assignee: 'Youssef Samir', prio: 'medium', status: 'pending', due: '25 Nov 2026', chain: ['now', 'wait'] },
+    { id: 3, title: 'Train the night shift on handheld scanners', assignee: 'Salma Ibrahim', prio: 'medium', status: 'todo', due: '28 Nov 2026' },
+    { id: 4, title: 'Integrate scanner data with the stock system', assignee: 'Tarek Nabil', prio: 'urgent', status: 'inprogress', due: '14 Nov 2026', overdue: 'Overdue by 3 days' },
+    { id: 5, title: 'Order 40 replacement scanner batteries', assignee: 'Mona Adel', prio: 'low', status: 'done', due: '10 Nov 2026' },
+    { id: 6, title: 'Write the rollout checklist', assignee: 'Mona Adel', prio: 'medium', status: 'todo', due: null },
+    { id: 7, title: 'Test the label printer on dock 3', assignee: 'Salma Ibrahim', prio: 'high', status: 'pending', due: '19 Nov 2026', chain: ['now'] },
+    { id: 8, title: 'Pilot scanning in the returns area', assignee: 'Tarek Nabil', prio: 'high', status: 'done', due: '7 Nov 2026' },
+    { id: 9, title: 'Replace shelf labels with RFID tags', assignee: 'Youssef Samir', prio: 'medium', status: 'rejected', due: '30 Nov 2026' },
+    { id: 10, title: 'Buy a second label printer', assignee: 'Salma Ibrahim', prio: 'low', status: 'cancelled', due: null },
+    { id: 11, title: 'Map Zone C aisle numbers', assignee: 'Youssef Samir', prio: 'low', status: 'todo', due: '2 Dec 2026' }
+  ];
+  var layout = 'table';
+  try { layout = localStorage.getItem('tm-task-layout') || 'table'; } catch (e) { }
+  var esc = TM.esc;
+
+  function statusBadge(s) { return '<span class="tm-status ' + CLS[s] + '">' + LABEL[s] + '</span>'; }
+  function prio(p) { return '<span class="tm-priority is-' + p + '">' + PRIO[p] + '</span>'; }
+  function mini(chain) {
+    if (!chain) return '';
+    var done = chain.filter(function (c) { return c === 'ok'; }).length;
+    return '<span class="tm-minichain ms-2" title="Approval step ' + (done + 1) + ' of ' + chain.length + '">' + chain.map(function (c) { return '<i class="' + (c === 'ok' ? 'ok' : c === 'now' ? 'now' : '') + '"></i>'; }).join('') + '</span><span class="visually-hidden">Approval step ' + (done + 1) + ' of ' + chain.length + '</span>';
+  }
+  function due(t) {
+    if (!t.due) return '<span class="tm-muted">No due date</span>';
+    return '<span class="tm-due">' + t.due + '</span>' + (t.overdue ? '<span class="tm-overdue d-flex mt-1"><i class="bi bi-alarm" aria-hidden="true"></i>' + t.overdue + '</span>' : '');
+  }
+
+  function filtered() {
+    var q = document.getElementById('fSearch').value.trim().toLowerCase();
+    var st = document.getElementById('fStatus').value;
+    var pr = document.getElementById('fPrio').value;
+    var as = document.getElementById('fAssignee').value;
+    var od = document.getElementById('fOverdue').checked;
+    return tasks.filter(function (t) {
+      return (!q || t.title.toLowerCase().indexOf(q) !== -1) && (!st || t.status === st) && (!pr || t.prio === pr) && (!as || t.assignee === as) && (!od || t.overdue);
+    });
+  }
+
+  function renderTable() {
+    var list = TM.state === 'filtered' ? [] : filtered();
+    document.getElementById('taskRows').innerHTML = list.map(function (t) {
+      return '<tr><td><a class="tm-title-link" href="task-detail.html?view=' + (t.status === 'pending' ? 'pending' : t.status) + '">' + esc(t.title) + '</a>' + (t.subs ? '<span class="tm-sub">' + t.subs + '</span>' : '') + '</td>' +
+        '<td class="text-nowrap">' + esc(t.assignee) + '</td><td>' + prio(t.prio) + '</td><td class="text-nowrap">' + statusBadge(t.status) + mini(t.chain) + '</td><td>' + due(t) + '</td></tr>';
+    }).join('');
+    var none = list.length === 0;
+    if (TM.state === 'loaded' || TM.state === 'filtered') {
+      document.getElementById('tableWrap').hidden = none || TM.state !== 'loaded';
+      document.getElementById('pager').hidden = none || TM.state !== 'loaded';
+      document.getElementById('noResults').hidden = !none;
+      document.getElementById('pagerText').textContent = 'Showing 1 to ' + list.length + ' of ' + list.length + ' tasks';
+    }
+  }
+
+  function check(t, to) {
+    var me = TM.user().name;
+    if (TM.view === 'archived') return 'This Project is archived. Its tasks cannot change.';
+    if (TM.role === 'admin') return 'Admins can view tasks but not change them.';
+    if (t.status === to) return null;
+    if (t.status === 'pending') return 'A pending task moves only when its approvers decide.';
+    if (to === 'pending') return 'A task cannot go back to Pending approval.';
+    var forward = (t.status === 'todo' && to === 'inprogress') || (t.status === 'inprogress' && to === 'done');
+    var back = (t.status === 'inprogress' && to === 'todo') || (t.status === 'done' && (to === 'inprogress' || to === 'todo'));
+    if (forward) {
+      if (t.assignee !== me) return 'Only the assignee, ' + t.assignee + ', can move this task forward.';
+      if (to === 'done' && t.openSubs) return 'This task closes by itself when all its sub-tasks are closed.';
+      return '';
+    }
+    if (back) return TM.role === 'manager' ? '' : 'Only the Department Manager can move a task back.';
+    return 'A task must be In progress before it can be Done.';
+  }
+
+  function move(id, to) {
+    var t = tasks.filter(function (x) { return x.id === id; })[0];
+    var why = check(t, to);
+    if (why === null) return;
+    if (why) { TM.toast(why, 'danger'); return; }
+    t.status = to;
+    TM.toast('Moved to ' + LABEL[to] + '.');
+    renderAll();
+  }
+
+  function renderBoard() {
+    var list = tasks.filter(function (t) { return COLS.indexOf(t.status) !== -1; });
+    document.getElementById('board').innerHTML = COLS.map(function (c) {
+      var items = list.filter(function (t) { return t.status === c; });
+      var cards = items.map(function (t) {
+        var moves = COLS.filter(function (to) { return to !== t.status && check(t, to) === ''; });
+        var menu = moves.length ? '<div class="dropdown"><button class="btn btn-quiet" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Move ' + esc(t.title) + '">Move</button><ul class="dropdown-menu dropdown-menu-end">' +
+          moves.map(function (to) { return '<li><button class="dropdown-item" type="button" data-move="' + t.id + '" data-to="' + to + '">' + LABEL[to] + '</button></li>'; }).join('') + '</ul></div>' : '';
+        return '<article class="tm-card" draggable="true" data-id="' + t.id + '"><a class="tm-card-title" href="task-detail.html?view=' + t.status + '">' + esc(t.title) + '</a>' +
+          '<div class="tm-card-meta">' + prio(t.prio) + (t.due ? '<span class="tm-due">' + t.due + '</span>' : '') + (t.overdue ? '<span class="tm-overdue"><i class="bi bi-alarm" aria-hidden="true"></i>Overdue</span>' : '') + (t.chain ? mini(t.chain) : '') + '</div>' +
+          '<div class="tm-card-foot"><span class="tm-avatar sm" aria-hidden="true">' + t.assignee.split(' ').map(function (w) { return w[0]; }).join('') + '</span><span class="tm-small">' + esc(t.assignee) + '</span>' + menu + '</div></article>';
+      }).join('');
+      return '<section class="tm-col" data-col="' + c + '" aria-label="' + LABEL[c] + '"><div class="tm-col-head">' + statusBadge(c) + '<span class="tm-col-count">' + items.length + '</span></div>' + (cards || '<div class="tm-col-empty">No tasks</div>') + '</section>';
+    }).join('');
+  }
+
+  function setLayout(l) {
+    layout = l;
+    try { localStorage.setItem('tm-task-layout', l); } catch (e) { }
+    renderAll();
+  }
+
+  function renderAll() {
+    var board = layout === 'board' && TM.state === 'loaded';
+    document.getElementById('btnTable').setAttribute('aria-pressed', String(!board));
+    document.getElementById('btnBoard').setAttribute('aria-pressed', String(board));
+    document.getElementById('tablePanel').hidden = board;
+    document.getElementById('boardPanel').hidden = !board;
+    document.getElementById('boardHint').hidden = !board;
+    renderTable();
+    if (board) renderBoard();
+  }
+
+  document.getElementById('btnTable').addEventListener('click', function () { setLayout('table'); });
+  document.getElementById('btnBoard').addEventListener('click', function () { setLayout('board'); });
+  ['fSearch', 'fStatus', 'fPrio', 'fAssignee', 'fOverdue'].forEach(function (id) {
+    document.getElementById(id).addEventListener(id === 'fSearch' ? 'input' : 'change', renderTable);
+  });
+  document.getElementById('clearFilters').addEventListener('click', function () {
+    document.getElementById('fSearch').value = '';
+    ['fStatus', 'fPrio', 'fAssignee'].forEach(function (id) { document.getElementById(id).value = ''; });
+    document.getElementById('fOverdue').checked = false;
+    if (TM.state === 'filtered') TM.setState('loaded'); else renderTable();
+  });
+
+  var board = document.getElementById('board');
+  var dragId = null;
+  board.addEventListener('dragstart', function (e) {
+    var card = e.target.closest('.tm-card');
+    if (!card) return;
+    dragId = +card.getAttribute('data-id');
+    card.classList.add('is-dragging');
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', String(dragId));
+  });
+  board.addEventListener('dragend', function (e) {
+    var card = e.target.closest('.tm-card');
+    if (card) card.classList.remove('is-dragging');
+    board.querySelectorAll('.tm-col').forEach(function (c) { c.classList.remove('is-over-ok', 'is-over-no'); });
+  });
+  board.addEventListener('dragover', function (e) {
+    var col = e.target.closest('.tm-col');
+    if (!col || dragId === null) return;
+    e.preventDefault();
+    var t = tasks.filter(function (x) { return x.id === dragId; })[0];
+    var why = check(t, col.getAttribute('data-col'));
+    board.querySelectorAll('.tm-col').forEach(function (c) { if (c !== col) c.classList.remove('is-over-ok', 'is-over-no'); });
+    col.classList.toggle('is-over-ok', why === '');
+    col.classList.toggle('is-over-no', !!why);
+    e.dataTransfer.dropEffect = why === '' ? 'move' : 'none';
+  });
+  board.addEventListener('drop', function (e) {
+    var col = e.target.closest('.tm-col');
+    if (!col || dragId === null) return;
+    e.preventDefault();
+    var id = dragId;
+    dragId = null;
+    move(id, col.getAttribute('data-col'));
+  });
+  board.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-move]');
+    if (b) move(+b.getAttribute('data-move'), b.getAttribute('data-to'));
+  });
+
+  TM.onChange(renderAll);
+})();
+</script>
+</body>
+</html>

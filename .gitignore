@@ -1,0 +1,17 @@
+.claude/settings.local.json
+
+bin/
+obj/
+*.user
+*.suo
+.vs/
+TestResults/
+
+node_modules/
+dist/
+.angular/
+
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

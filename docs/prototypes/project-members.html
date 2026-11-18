@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Project members | Task Management prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="assets/prototype.css" rel="stylesheet">
+<script src="assets/prototype.js"></script>
+</head>
+<body data-nav="projects.html" data-roles="manager senior junior admin" data-states="loaded loading empty error" data-views="active:Active Project|archived:Archived Project" data-view-label="Project status">
+<main>
+  <div class="tm-crumb"><a href="projects.html">Projects</a></div>
+  <div class="tm-page-head">
+    <div class="tm-page-title">
+      <h1>Warehouse barcode rollout</h1>
+      <p>Operations <span class="ms-2 tm-status is-active" data-view="active">Active</span><span class="ms-2 tm-status is-archived" data-view="archived">Archived</span></p>
+    </div>
+    <div class="tm-actionbar" data-view="active">
+      <button class="btn btn-primary" type="button" data-role="manager senior" data-bs-toggle="modal" data-bs-target="#addMember"><i class="bi bi-person-plus me-1" aria-hidden="true"></i>Add member</button>
+    </div>
+  </div>
+
+  <div class="tm-banner" data-view="archived">
+    <i class="bi bi-archive" aria-hidden="true"></i>
+    <div>This Project is archived. Members cannot be added or removed.</div>
+  </div>
+
+  <nav class="tm-tabs" aria-label="Project sections">
+    <a href="project-tasks.html">Tasks</a>
+    <a href="project-members.html" aria-current="page">Members</a>
+  </nav>
+
+  <section class="tm-panel" aria-label="Members">
+    <div class="table-responsive" data-state="loaded">
+      <table class="table tm-table">
+        <thead>
+          <tr><th scope="col">Member</th><th scope="col">Role</th><th scope="col" class="tm-hide-xs">Added</th><th scope="col" class="tm-hide-xs">Tasks here</th><th scope="col"><span class="visually-hidden">Actions</span></th></tr>
+        </thead>
+        <tbody id="memberRows"></tbody>
+      </table>
+    </div>
+
+    <div data-state="loading" aria-busy="true" aria-label="Loading members">
+      <div class="tm-skel-row"><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span><span class="tm-skel w-30"></span></div>
+      <div class="tm-skel-row"><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span><span class="tm-skel w-30"></span></div>
+      <div class="tm-skel-row"><span class="tm-skel w-70"></span><span class="tm-skel w-50"></span><span class="tm-skel w-50"></span><span class="tm-skel w-30"></span></div>
+    </div>
+
+    <div class="tm-empty" data-state="empty">
+      <svg class="tm-empty-art" width="96" height="28" viewBox="0 0 96 28" aria-hidden="true"><line x1="14" y1="14" x2="82" y2="14"/><circle cx="14" cy="14" r="10"/><circle cx="48" cy="14" r="10"/><circle cx="82" cy="14" r="10"/></svg>
+      <h2>No members yet</h2>
+      <p data-role="manager">You created this Project, but Managers are not members. Add Seniors and Juniors from Operations so tasks can be assigned to them.</p>
+      <p data-role="senior junior admin">Members show here when a Senior or the Manager adds them.</p>
+      <button class="btn btn-primary" type="button" data-role="manager senior" data-view="active" data-bs-toggle="modal" data-bs-target="#addMember">Add member</button>
+    </div>
+
+    <div class="tm-error" data-state="error" role="alert">
+      <i class="bi bi-wifi-off" aria-hidden="true"></i>
+      <div>
+        <h2>Members did not load</h2>
+        <p>The server did not answer. Check your connection, then try again.</p>
+        <button class="btn btn-quiet" type="button" data-tm-set-state="loaded">Try again</button>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="modal fade" id="addMember" tabindex="-1" aria-labelledby="addMemberTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <form class="modal-content" id="addMemberForm">
+      <div class="modal-header">
+        <h2 class="modal-title" id="addMemberTitle">Add member</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <label class="form-label" for="mSearch">Find a person in Operations</label>
+        <input class="form-control mb-3" id="mSearch" type="search" placeholder="Type a name">
+        <div class="tm-panel">
+          <ul class="tm-list" id="candidates">
+            <li><input class="form-check-input mt-1" type="radio" name="cand" id="c1" value="Dina Lotfy" checked><label class="flex-grow-1" for="c1"><strong class="d-block">Dina Lotfy</strong><span class="tm-muted tm-small">Junior</span></label></li>
+            <li><input class="form-check-input mt-1" type="radio" name="cand" id="c2" value="Ahmed Reda"><label class="flex-grow-1" for="c2"><strong class="d-block">Ahmed Reda</strong><span class="tm-muted tm-small">Senior</span></label></li>
+            <li><input class="form-check-input mt-1" type="radio" name="cand" id="c3" value="Nour Wahba"><label class="flex-grow-1" for="c3"><strong class="d-block">Nour Wahba</strong><span class="tm-muted tm-small">Junior</span></label></li>
+          </ul>
+        </div>
+        <p class="form-text mb-0 mt-2">Only Seniors and Juniors from Operations who are not members yet are listed.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-quiet" data-bs-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn btn-primary">Add member</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="modal fade" id="removeMember" tabindex="-1" aria-labelledby="removeMemberTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="removeMemberTitle">Remove <span id="rmName"></span>?</h2>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-0">They lose access to this Project and its tasks. You can add them again later.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-quiet" data-bs-dismiss="modal">Keep member</button>
+        <button type="button" class="btn btn-danger" id="rmConfirm">Remove member</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function () {
+  var members = [
+    { name: 'Mona Adel', role: 'Senior', added: '2 Nov 2026', tasks: 2, pending: 0 },
+    { name: 'Tarek Nabil', role: 'Senior', added: '2 Nov 2026', tasks: 2, pending: 1 },
+    { name: 'Youssef Samir', role: 'Junior', added: '3 Nov 2026', tasks: 4, pending: 0 },
+    { name: 'Salma Ibrahim', role: 'Junior', added: '3 Nov 2026', tasks: 3, pending: 0 },
+    { name: 'Hany Mostafa', role: 'Junior', added: '15 Nov 2026', tasks: 0, pending: 0 }
+  ];
+  var target = null;
+  var esc = TM.esc;
+
+  function render() {
+    var canEdit = (TM.role === 'manager' || TM.role === 'senior') && TM.view === 'active';
+    document.getElementById('memberRows').innerHTML = members.map(function (m, i) {
+      var initials = m.name.split(' ').map(function (w) { return w[0]; }).join('');
+      var you = m.name === TM.user().name ? ' <span class="tm-muted fw-normal">(you)</span>' : '';
+      var work = m.tasks ? m.tasks + (m.tasks === 1 ? ' task' : ' tasks') : 'None';
+      if (m.pending) work += ', ' + m.pending + ' approval waiting';
+      var btn = canEdit && m.name !== TM.user().name ? '<button class="btn btn-danger-quiet btn-sm" type="button" data-rm="' + i + '">Remove</button>' : '';
+      return '<tr><td><div class="d-flex align-items-center gap-2"><span class="tm-avatar sm" aria-hidden="true">' + initials + '</span><strong class="fw-semibold">' + esc(m.name) + '</strong>' + you + '</div></td><td>' + m.role + '</td><td class="tm-hide-xs tm-num">' + m.added + '</td><td class="tm-hide-xs">' + work + '</td><td class="text-end">' + btn + '</td></tr>';
+    }).join('');
+  }
+
+  document.getElementById('memberRows').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-rm]');
+    if (!b) return;
+    var m = members[+b.getAttribute('data-rm')];
+    if (m.tasks || m.pending) {
+      var why = m.tasks ? m.name + ' has ' + m.tasks + ' tasks in this Project, in any status. A member with tasks cannot be removed.' : m.name + ' still has an approval waiting in this Project.';
+      TM.toast(why, 'danger');
+      return;
+    }
+    target = m;
+    document.getElementById('rmName').textContent = m.name;
+    bootstrap.Modal.getOrCreateInstance(document.getElementById('removeMember')).show();
+  });
+  document.getElementById('rmConfirm').addEventListener('click', function () {
+    members = members.filter(function (m) { return m !== target; });
+    bootstrap.Modal.getInstance(document.getElementById('removeMember')).hide();
+    TM.toast(target.name + ' removed from the Project.');
+    render();
+  });
+  document.getElementById('mSearch').addEventListener('input', function () {
+    var q = this.value.trim().toLowerCase();
+    document.querySelectorAll('#candidates li').forEach(function (li) { li.hidden = q && li.textContent.toLowerCase().indexOf(q) === -1; });
+  });
+  document.getElementById('addMemberForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var c = document.querySelector('input[name="cand"]:checked');
+    if (!c) return;
+    var li = c.closest('li');
+    members.push({ name: c.value, role: li.querySelector('.tm-muted').textContent, added: '17 Nov 2026', tasks: 0, pending: 0 });
+    li.remove();
+    var next = document.querySelector('input[name="cand"]');
+    if (next) next.checked = true;
+    bootstrap.Modal.getInstance(document.getElementById('addMember')).hide();
+    TM.toast(c.value + ' added to the Project.');
+    render();
+  });
+  TM.onChange(render);
+})();
+</script>
+</body>
+</html>
