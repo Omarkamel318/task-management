@@ -8,7 +8,7 @@ The slice plan is in [slices.md](slices.md).
 
 **Slice 0. Walking skeleton.** Planning the build.
 Q1 to Q5 answered (D28 to D31, D35). Lessons part 1 done. Lessons parts 2 and 3 skipped (D42).
-Pre-build answers: D36 to D47. No code yet.
+Pre-build answers: D36 to D47. Tests paused (D48). No code yet.
 Backend tasks restated and confirmed by Omar on 2026-11-18.
 
 ## Finished slices
@@ -22,7 +22,7 @@ None yet.
 
 1. Omar installs the .NET 10 SDK and the `dotnet-ef` global tool, version 10 (S0-6).
 2. Build Slice 0 backend, task by task:
-   1. Git setup, solution, 4 `src` projects, 3 test projects, references.
+   1. Git setup, solution, 4 `src` projects, references.
    2. NuGet packages.
    3. Domain and Application basics, `AddApplication()`.
    4. Infrastructure: `AppUser`, `AppDbContext`, `AddInfrastructure()`.
@@ -30,7 +30,7 @@ None yet.
    6. JWT, `AuthService`, `CurrentUser`.
    7. Api setup: auth, fallback policy, CORS, HTTPS, exception handler, validation hook.
    8. `POST /api/auth/sign-in`, `GET /api/auth/me`.
-   9. Integration test base and the 3 tests.
+   9. Manual check of sign-in and `/me` (200, 401, 401).
 3. Then the Slice 0 frontend.
 
 ## Open problems

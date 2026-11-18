@@ -12,7 +12,7 @@ Four roles: Admin, Manager, Senior, Junior. In-app notifications. English only.
 - Data access: EF Core, code first, migrations, through `IAppDbContext`. No repositories
 - Validation: FluentValidation
 - Sign-in: ASP.NET Core Identity + JWT (8 hours, no refresh tokens)
-- Tests: xUnit, Shouldly, NSubstitute. Integration tests on a local SQL Server test database (D43). No Angular unit tests until a runner is chosen
+- Tests: paused for now (D48). Later: xUnit, Shouldly, NSubstitute. Integration tests on a local SQL Server test database (D43). No Angular unit tests until a runner is chosen
 
 ## Architecture
 
@@ -48,7 +48,7 @@ Four roles: Admin, Manager, Senior, Junior. In-app notifications. English only.
 - For each part before build it, Explain for me every thing and new topics if exist in short and direct response.
 - Use simple English and short sentences.
 - Wait for Omar's confirmation.
-- Check every "Done when" line. `dotnet test` passes. Omar tries it in the browser.
+- Check every "Done when" line. Omar tries it in the browser. No tests for now (D48).
 - Do not change a decision in `docs/decisions.md` unless asked. New decisions are added as new rows.
 - If a rule is missing or unclear, ask. Do not guess.
 - Do not pick anything listed under "Open (Batch 2)" in `docs/architecture.md` without asking.

@@ -313,7 +313,7 @@ A user never gets a notification for his own action. One user gets at most one n
 ### 6.5 Maintainability
 
 - Clean Architecture as in [architecture.md](architecture.md).
-- Business rules in Domain are covered by unit tests.
+- Business rules in Domain are covered by unit tests. Paused for now (D48).
 - Production style code with no comments.
 
 ## 7. MVP scope

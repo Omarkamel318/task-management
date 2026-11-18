@@ -2,6 +2,7 @@
 
 Each rule has an ID, the rule, and at least one test.
 Tests use "Given / When / Then". Expected HTTP codes follow [architecture.md](architecture.md).
+Tests are paused for now (D48). Use the Given / When / Then lines as manual checks in the browser or Swagger.
 
 Rule IDs never change. A removed rule keeps its ID and is marked Removed.
 

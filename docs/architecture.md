@@ -150,6 +150,8 @@ Response codes:
 
 ## 12. Testing
 
+Paused for now (D48). No test projects yet. The plan below is for later.
+
 - xUnit, Shouldly, and NSubstitute (D15).
 - Projects:
   - `backend/tests/TaskManagement.Domain.UnitTests`: business rules, from the Given / When / Then lines.

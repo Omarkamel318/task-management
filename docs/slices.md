@@ -6,6 +6,8 @@ Slices that wait on an open question come last.
 
 Progress is tracked in [STATUS.md](STATUS.md). Screens come from [docs/prototypes](prototypes/).
 
+> **Tests are paused (D48).** Skip every test task and every "tests pass" Done-when line for now. They stay here as the plan for later.
+
 | # | Slice | Blocked by |
 |---|---|---|
 | 0 | Walking skeleton | |
@@ -34,11 +36,11 @@ Progress is tracked in [STATUS.md](STATUS.md). Screens come from [docs/prototype
 
 ## Slice 0. Walking skeleton
 
-**Goal:** Admin signs in from Angular and sees an empty app shell. All layers are wired and tested.
+**Goal:** Admin signs in from Angular and sees an empty app shell. All layers are wired.
 
 **Backend**
-- `backend/TaskManagement.sln`, the 4 `src` projects, and the 3 test projects, with correct references.
-- NuGet packages: EF Core, Identity, JWT bearer, FluentValidation, xUnit, Shouldly, NSubstitute. No Testcontainers for now (D43).
+- `backend/TaskManagement.sln` and the 4 `src` projects, with correct references. No test projects for now (D48).
+- NuGet packages: EF Core, Identity, JWT bearer, FluentValidation. No test packages for now (D48).
 - DB: `AppDbContext` based on the Identity DbContext with `int` keys. User fields `FullName`, `MustChangePassword`, `CreatedAt`. `DepartmentId` comes in Slice 2.
 - DB: first migration, applied to local SQL Server. Seed the 4 roles and one Admin from dev user-secrets.
 - `IAppDbContext` (with read-only `IQueryable<UserInfo>`), `IClock`, `ICurrentUser`, `IAuthService`, `ITokenService` in Application. Implementations in Infrastructure and Api (D35).
@@ -47,8 +49,7 @@ Progress is tracked in [STATUS.md](STATUS.md). Screens come from [docs/prototype
 - Global exception handler: domain, validation, not found, forbidden, and concurrency errors to ProblemDetails (400, 403, 404, 409).
 - FluentValidation hook that returns 400 with a field-to-messages list.
 - Fallback policy: sign-in required on every endpoint. CORS for the Angular origin. HTTPS.
-- Integration test base with `WebApplicationFactory` and the local test database `TaskManagement_Tests` (D43).
-- Tests: sign-in success returns 200 and a token. Wrong password returns 401. `/me` without a token returns 401.
+- Manual check: sign-in success returns 200 and a token. Wrong password returns 401. `/me` without a token returns 401.
 
 **Frontend**
 - New Angular 17 app in `frontend/` with standalone components. Bootstrap 5 and ng-bootstrap.
@@ -63,7 +64,7 @@ Progress is tracked in [STATUS.md](STATUS.md). Screens come from [docs/prototype
 **Rules:** None. Platform only. D19, D28, D29, D30.
 
 **Done when**
-- `dotnet test` passes, including the integration tests on the local test database.
+- The manual sign-in and `/me` checks give 200, 401, and 401.
 - Admin signs in from the browser and sees the shell with his name.
 - Sign out works. A wrong password shows an error.
 - An expired or missing token goes back to sign-in.
