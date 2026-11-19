@@ -20,10 +20,10 @@ None yet.
 
 ## Next step
 
-1. Omar installs the .NET 10 SDK and the `dotnet-ef` global tool, version 10 (S0-6).
+1. Omar installs the `dotnet-ef` global tool, version 10 (S0-6). Needed before task 5.
 2. Build Slice 0 backend, task by task:
-   1. Git setup, solution, 4 `src` projects, references.
-   2. NuGet packages.
+   1. Done: git setup, solution, 4 `src` projects, references. Builds on `net10.0`.
+   2. Done: NuGet packages with Central Package Management (D49). EF Core and ASP.NET 10.0.15, IdentityModel 8.19.2, FluentValidation 12.2.0. Build clean.
    3. Domain and Application basics, `AddApplication()`.
    4. Infrastructure: `AppUser`, `AppDbContext`, `AddInfrastructure()`.
    5. First migration and the Development seed.
@@ -39,7 +39,7 @@ None yet.
 
 | # | Question |
 |---|---|
-| S0-6 | Install the .NET 10 SDK and the `dotnet-ef` global tool (version 10). Only SDK 8.0.100 is installed. |
+| S0-6 | SDK 11.0.100 and the .NET 10 runtime are installed. SDK 11 builds `net10.0`. Still needed: the `dotnet-ef` global tool (version 10). |
 
 ### Resolved
 
