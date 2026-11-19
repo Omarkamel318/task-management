@@ -85,7 +85,7 @@ General rules:
 | Field | Type | Notes |
 |---|---|---|
 | Identity fields | | Email is unique and used to sign in. |
-| FullName | nvarchar | Required. |
+| FullName | nvarchar(100) | Required. Max 100 characters (D51). |
 | DepartmentId | int, null | Required for Senior and Junior. Null for Manager and Admin. |
 | MustChangePassword | bit | True after Admin creates the user or resets the password. False after the user changes it (D18). |
 | CreatedAt | datetime2 | UTC. |

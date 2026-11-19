@@ -20,12 +20,12 @@ None yet.
 
 ## Next step
 
-1. Omar installs the `dotnet-ef` global tool, version 10 (S0-6). Needed before task 5.
+1. Done: `dotnet-ef` 10.0.15 installed (S0-6). User-secrets on the Api project with `ConnectionStrings:Default`.
 2. Build Slice 0 backend, task by task:
    1. Done: git setup, solution, 4 `src` projects, references. Builds on `net10.0`.
    2. Done: NuGet packages with Central Package Management (D49). EF Core and ASP.NET 10.0.15, IdentityModel 8.19.2, FluentValidation 12.2.0. Build clean.
    3. Done: Domain `Roles`, `DomainException`. Application interfaces, auth DTOs, `SignInRequestValidator`, `NotFoundException`, `ForbiddenException`, `AddApplication()`. Folder layout D50. Build clean.
-   4. Infrastructure: `AppUser`, `AppDbContext`, `AddInfrastructure()`.
+   4. Done: Infrastructure `AppUser`, `AppDbContext` (implements `IAppDbContext`, Identity tables renamed per D38), one configuration per Identity type, `SystemClock`, `AddInfrastructure()`. Wired in `Program.cs`. `FullName` max 100 (D51). Build clean.
    5. First migration and the Development seed.
    6. JWT, `AuthService`, `CurrentUser`.
    7. Api setup: auth, fallback policy, CORS, HTTPS, exception handler, validation hook.
@@ -39,12 +39,13 @@ None yet.
 
 | # | Question |
 |---|---|
-| S0-6 | SDK 11.0.100 and the .NET 10 runtime are installed. SDK 11 builds `net10.0`. Still needed: the `dotnet-ef` global tool (version 10). |
+| | None. |
 
 ### Resolved
 
 | # | Answer |
 |---|---|
+| S0-6 | SDK 11.0.100 and the .NET 10 runtime build `net10.0`. `dotnet-ef` 10.0.15 installed on 2026-11-19. |
 | S0-1 | Local SQL Server test database `TaskManagement_Tests` instead of Testcontainers (D43). |
 | S0-2 | `.\MSSQLSERVER01` with Windows sign-in (D44). |
 | S0-3 | No lockout for now (D45). |
