@@ -1,6 +1,6 @@
 # Status
 
-Last updated: 2026-11-18
+Last updated: 2026-11-19
 
 The slice plan is in [slices.md](slices.md).
 
@@ -24,7 +24,7 @@ None yet.
 2. Build Slice 0 backend, task by task:
    1. Done: git setup, solution, 4 `src` projects, references. Builds on `net10.0`.
    2. Done: NuGet packages with Central Package Management (D49). EF Core and ASP.NET 10.0.15, IdentityModel 8.19.2, FluentValidation 12.2.0. Build clean.
-   3. Domain and Application basics, `AddApplication()`.
+   3. Done: Domain `Roles`, `DomainException`. Application interfaces, auth DTOs, `SignInRequestValidator`, `NotFoundException`, `ForbiddenException`, `AddApplication()`. Folder layout D50. Build clean.
    4. Infrastructure: `AppUser`, `AppDbContext`, `AddInfrastructure()`.
    5. First migration and the Development seed.
    6. JWT, `AuthService`, `CurrentUser`.

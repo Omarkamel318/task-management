@@ -49,10 +49,11 @@ Four roles: Admin, Manager, Senior, Junior. In-app notifications. English only.
 
 1. Restate the tasks in short points.
 2. Make a plan. Do not edit any file yet.
-3. Explain only new concepts: what it is, why we use it, in 2-3 lines.
-4. Wait for my confirmation. Then do one task at a time.
-5. After each task: list the changed files, summarize the changes, and ask me one question to check my understanding.
-6. At the end of the part: list every "Done when" line with exact steps for me to test in the browser (URL, input, expected result).
+3. For each task before building it, Explain for me what will you do with code in details and why.
+4. Explain only new concepts: what it is, why we use it, in 2-3 lines.
+5. Wait for my confirmation.
+6. After each task: list the changed files, summarize the changes, and ask me one question to check my understanding.
+7. At the end of the part: list every "Done when" line with exact steps for me to test in the browser (URL, input, expected result).
 
 ## Rules
 
