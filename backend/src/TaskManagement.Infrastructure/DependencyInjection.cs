@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using TaskManagement.Application.Common.Interfaces;
 using TaskManagement.Infrastructure.Identity;
 using TaskManagement.Infrastructure.Persistence;
+using TaskManagement.Infrastructure.Persistence.Seed;
 using TaskManagement.Infrastructure.Time;
 
 namespace TaskManagement.Infrastructure;
@@ -24,6 +25,9 @@ public static class DependencyInjection
             .AddEntityFrameworkStores<AppDbContext>();
 
         services.AddSingleton<IClock, SystemClock>();
+
+        services.Configure<AdminSeedOptions>(configuration.GetSection(AdminSeedOptions.SectionName));
+        services.AddScoped<DatabaseSeeder>();
 
         return services;
     }

@@ -161,6 +161,6 @@ Paused for now (D48). No test projects yet. The plan below is for later.
 ## 13. Dev setup and hosting
 
 - Dev database: SQL Server installed locally, instance `.\MSSQLSERVER01`, Windows sign-in (D16, D44).
-- Migrations are applied by hand. Roles and the first Admin are seeded at startup in Development only (D46).
+- Migrations are applied by hand (D46). Roles and the first Admin are seeded at startup in every environment. Dev reads the Admin from user-secrets, production from env variables. Outside Development the Admin must change the password at first sign-in (D52).
 - Production: Docker containers (D17).
 

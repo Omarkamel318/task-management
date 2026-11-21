@@ -26,8 +26,8 @@ None yet.
    2. Done: NuGet packages with Central Package Management (D49). EF Core and ASP.NET 10.0.15, IdentityModel 8.19.2, FluentValidation 12.2.0. Build clean.
    3. Done: Domain `Roles`, `DomainException`. Application interfaces, auth DTOs, `SignInRequestValidator`, `NotFoundException`, `ForbiddenException`, `AddApplication()`. Folder layout D50. Build clean.
    4. Done: Infrastructure `AppUser`, `AppDbContext` (implements `IAppDbContext`, Identity tables renamed per D38), one configuration per Identity type, `SystemClock`, `AddInfrastructure()`. Wired in `Program.cs`. `FullName` max 100 (D51). Build clean.
-   5. First migration and the Development seed.
-   6. JWT, `AuthService`, `CurrentUser`.
+   5. Done: migration `InitialCreate` applied. All foreign keys set to Restrict in `AppDbContext`, including Identity tables. `DatabaseSeeder` adds the 4 roles and the first Admin in every environment (D52). Dev reads `Seed:*` from user-secrets, production from `Seed__*` env variables. Skips the Admin when one exists. Production check done on a scratch database.
+   6. Password policy: min 8 characters, must contain letters, numbers, and symbols (Omar, 2026-11-19, new decision D53). Then JWT, `AuthService`, `CurrentUser`.
    7. Api setup: auth, fallback policy, CORS, HTTPS, exception handler, validation hook.
    8. `POST /api/auth/sign-in`, `GET /api/auth/me`.
    9. Manual check of sign-in and `/me` (200, 401, 401).
@@ -68,3 +68,4 @@ None yet.
 | OQ10: side effects of a role or Department change. | Slice 19 |
 | OQ11: Department with no Manager. | Slice 19 |
 | Production hosting details (Batch 2). | Release |
+| CORS allows any origin for now (task 7). Limit it to the Angular origin. | Release |
