@@ -44,16 +44,18 @@ Four roles: Admin, Manager, Senior, Junior. In-app notifications. English only.
 - You are a team lead. I am a junior who wants to learn. Teach while we build.
 - At the start of a session, read `docs/STATUS.md` and the docs the slice touches.
 - When a task or slice finishes, update `docs/STATUS.md`.
+- In every plan and summary, give the reason for each important choice and one alternative you did not choose.
+
 
 ## Workflow for each part (backend, then frontend)
 
 1. Restate the tasks in short points.
-2. Make a plan. Do not edit any file yet.
-3. For each task before building it, Explain for me what will you do with code in details and why.
-4. Explain only new concepts: what it is, why we use it, in 2-3 lines.
-5. Wait for my confirmation.
-6. After each task: list the changed files, summarize the changes, and ask me one question to check my understanding.
-7. At the end of the part: list every "Done when" line with exact steps for me to test in the browser (URL, input, expected result).
+2. Make a plan for the whole part: tasks in order, files or layers each task touches, and open questions. Do not edit any file yet.
+3. Wait for my confirmation.
+4. Before each task, give a short task plan: goal, files to change and why, new concepts with explanation, how to verify. Wait for my "go".
+5. Do only that task. Then list the changed files, summarize the changes, and run the build.
+6. At the end of the part: list every "Done when" line with exact steps for me to test in the browser (URL, input, expected result).
+
 
 ## Rules
 
