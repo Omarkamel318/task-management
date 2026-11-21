@@ -1,3 +1,6 @@
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+
 namespace TaskManagement.Infrastructure.Auth;
 
 public sealed class JwtOptions
@@ -13,4 +16,6 @@ public sealed class JwtOptions
     public string Key { get; init; } = string.Empty;
 
     public int ExpiryHours { get; init; } = 8;
+
+    public SymmetricSecurityKey CreateSigningKey() => new(Encoding.UTF8.GetBytes(Key));
 }

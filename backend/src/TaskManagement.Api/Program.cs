@@ -1,7 +1,14 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using TaskManagement.Api.Auth;
+using TaskManagement.Api.Errors;
+using TaskManagement.Api.Validation;
 using TaskManagement.Application;
 using TaskManagement.Application.Common.Interfaces;
 using TaskManagement.Infrastructure;
+using TaskManagement.Infrastructure.Auth;
 using TaskManagement.Infrastructure.Persistence.Seed;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +19,37 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUser, CurrentUser>();
 
+builder.Services.AddControllers(options => options.Filters.Add<ValidationFilter>());
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer();
+builder.Services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+    .Configure<IOptions<JwtOptions>>((options, jwtOptions) =>
+    {
+        var jwt = jwtOptions.Value;
+        options.MapInboundClaims = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwt.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwt.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = jwt.CreateSigningKey(),
+            ValidAlgorithms = [SecurityAlgorithms.HmacSha256],
+            ValidateLifetime = true,
+            NameClaimType = AppClaimTypes.Name,
+            RoleClaimType = AppClaimTypes.Role
+        };
+    });
+
+builder.Services.AddAuthorizationBuilder()
+    .SetFallbackPolicy(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+
+builder.Services.AddCors(options =>
+    options.AddDefaultPolicy(policy => policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()));
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -19,5 +57,20 @@ using (var scope = app.Services.CreateScope())
     var seeder = scope.ServiceProvider.GetRequiredService<DatabaseSeeder>();
     await seeder.SeedAsync();
 }
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseCors();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.Run();

@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
@@ -20,8 +19,7 @@ public sealed class TokenService : ITokenService
     {
         _jwt = options.Value;
         _clock = clock;
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
-        _signingCredentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        _signingCredentials = new SigningCredentials(_jwt.CreateSigningKey(), SecurityAlgorithms.HmacSha256);
     }
 
     public AccessToken Create(UserInfo user)
