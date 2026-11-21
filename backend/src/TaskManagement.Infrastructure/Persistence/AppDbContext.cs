@@ -11,15 +11,17 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options)
     : IdentityDbContext<AppUser, IdentityRole<int>, int>(options), IAppDbContext
 {
     IQueryable<UserInfo> IAppDbContext.Users =>
-        Users.AsNoTracking().Select(u => new UserInfo(
-            u.Id,
-            u.Email!,
-            u.FullName,
-            UserRoles.Where(ur => ur.UserId == u.Id)
+        Users.AsNoTracking().Select(u => new UserInfo
+        {
+            Id = u.Id,
+            Email = u.Email!,
+            FullName = u.FullName,
+            Role = UserRoles.Where(ur => ur.UserId == u.Id)
                 .Join(Roles, ur => ur.RoleId, r => r.Id, (ur, r) => r.Name!)
                 .FirstOrDefault() ?? string.Empty,
-            u.MustChangePassword,
-            u.CreatedAt));
+            MustChangePassword = u.MustChangePassword,
+            CreatedAt = u.CreatedAt
+        });
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

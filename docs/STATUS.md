@@ -27,7 +27,7 @@ None yet.
    3. Done: Domain `Roles`, `DomainException`. Application interfaces, auth DTOs, `SignInRequestValidator`, `NotFoundException`, `ForbiddenException`, `AddApplication()`. Folder layout D50. Build clean.
    4. Done: Infrastructure `AppUser`, `AppDbContext` (implements `IAppDbContext`, Identity tables renamed per D38), one configuration per Identity type, `SystemClock`, `AddInfrastructure()`. Wired in `Program.cs`. `FullName` max 100 (D51). Build clean.
    5. Done: migration `InitialCreate` applied. All foreign keys set to Restrict in `AppDbContext`, including Identity tables. `DatabaseSeeder` adds the 4 roles and the first Admin in every environment (D52). Dev reads `Seed:*` from user-secrets, production from `Seed__*` env variables. Skips the Admin when one exists. Production check done on a scratch database.
-   6. Password policy: min 8 characters, must contain letters, numbers, and symbols (Omar, 2026-11-19, new decision D53). Then JWT, `AuthService`, `CurrentUser`.
+   6. Done: password policy (D53) with `LetterPasswordValidator`. `JwtOptions` (validated on start, `Jwt:Key` in user-secrets, issuer and audience in `appsettings.json`), `TokenService` (claims `sub`, `email`, `name`, `role`, `jti`, 8 hours), `AuthService.SignInAsync`, `CurrentUser` in Api. `UserInfo` changed to init properties so EF can filter and page `IAppDbContext.Users`.
    7. Api setup: auth, fallback policy, CORS, HTTPS, exception handler, validation hook.
    8. `POST /api/auth/sign-in`, `GET /api/auth/me`.
    9. Manual check of sign-in and `/me` (200, 401, 401).
