@@ -29,7 +29,7 @@ None yet.
    5. Done: migration `InitialCreate` applied. All foreign keys set to Restrict in `AppDbContext`, including Identity tables. `DatabaseSeeder` adds the 4 roles and the first Admin in every environment (D52). Dev reads `Seed:*` from user-secrets, production from `Seed__*` env variables. Skips the Admin when one exists. Production check done on a scratch database.
    6. Done: password policy (D53) with `LetterPasswordValidator`. `JwtOptions` (validated on start, `Jwt:Key` in user-secrets, issuer and audience in `appsettings.json`), `TokenService` (claims `sub`, `email`, `name`, `role`, `jti`, 8 hours), `AuthService.SignInAsync`, `CurrentUser` in Api. `UserInfo` changed to init properties so EF can filter and page `IAppDbContext.Users`.
    7. Done: JwtBearer (issuer, audience, key, HS256 only, lifetime, `MapInboundClaims = false`), fallback policy (sign-in required, also on unknown routes), CORS any origin (D54), HTTPS redirect and HSTS outside Development, `GlobalExceptionHandler` and `UseStatusCodePages` (D55), `ValidationFilter`.
-   8. `POST /api/auth/sign-in`, `GET /api/auth/me`.
+   8. Done: `AuthController` with `POST /api/auth/sign-in` (`[AllowAnonymous]`, 401 ProblemDetails on wrong credentials) and `GET /api/auth/me`. `UserService.GetByIdAsync` in Application reads `IAppDbContext.Users`. Smoke test: 200, 401, 400, 401, 200, 404.
    9. Manual check of sign-in and `/me` (200, 401, 401).
 3. Then the Slice 0 frontend.
 
