@@ -8,7 +8,7 @@ The slice plan is in [slices.md](slices.md).
 
 **Slice 0. Walking skeleton.** Backend done. Frontend next.
 Q1 to Q5 answered (D28 to D31, D35). Lessons part 1 done. Lessons parts 2 and 3 skipped (D42).
-Pre-build answers: D36 to D47. Tests paused (D48). Backend part done (tasks 1 to 10). Frontend part not started.
+Pre-build answers: D36 to D47. Tests paused (D48). Backend part done (tasks 1 to 10). Frontend part in progress (task 1 of 8 done).
 Backend tasks restated and confirmed by Omar on 2026-11-18.
 
 ## Finished slices
@@ -32,7 +32,10 @@ None yet.
    8. Done: `AuthController` with `POST /api/auth/sign-in` (`[AllowAnonymous]`, 401 ProblemDetails on wrong credentials) and `GET /api/auth/me`. `UserService.GetByIdAsync` in Application reads `IAppDbContext.Users`. Smoke test: 200, 401, 400, 401, 200, 404.
    9. Done (skipped by Omar on 2026-11-22). Covered by the task 8 smoke test: sign-in 200 with a token, wrong password 401, `/me` without a token 401.
    10. Done: Swagger (D56) at `https://localhost:7100/swagger`, Development only.
-3. Backend part of Slice 0 is done. Next: the Slice 0 frontend.
+3. Backend part of Slice 0 is done.
+4. Build Slice 0 frontend, task by task:
+   1. Done: Angular 17.3 app in `frontend/` (standalone, routing, CSS, no SSR, no spec files). Environment files with `apiUrl`. Empty `core/`, `features/`, `shared/`. Build clean.
+   2. Next: Bootstrap, ng-bootstrap, Bootstrap Icons, global styles from `prototype.css`.
 
 ## Open problems
 
