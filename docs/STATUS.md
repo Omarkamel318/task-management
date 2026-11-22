@@ -8,7 +8,7 @@ The slice plan is in [slices.md](slices.md).
 
 **Slice 0. Walking skeleton.** Backend done. Frontend next.
 Q1 to Q5 answered (D28 to D31, D35). Lessons part 1 done. Lessons parts 2 and 3 skipped (D42).
-Pre-build answers: D36 to D47. Tests paused (D48). Backend part done (tasks 1 to 10). Frontend part in progress (task 1 of 8 done).
+Pre-build answers: D36 to D47. Tests paused (D48). Backend part done (tasks 1 to 10). Frontend part in progress (tasks 1 and 2 of 8 done).
 Backend tasks restated and confirmed by Omar on 2026-11-18.
 
 ## Finished slices
@@ -35,7 +35,8 @@ None yet.
 3. Backend part of Slice 0 is done.
 4. Build Slice 0 frontend, task by task:
    1. Done: Angular 17.3 app in `frontend/` (standalone, routing, CSS, no SSR, no spec files). Environment files with `apiUrl`. Empty `core/`, `features/`, `shared/`. Build clean.
-   2. Next: Bootstrap, ng-bootstrap, Bootstrap Icons, global styles from `prototype.css`.
+   2. Done: `bootstrap` 5.3.3, `@ng-bootstrap/ng-bootstrap` 16.0.0, `@popperjs/core` 2.11.8, `@angular/localize` 17.3.12, `bootstrap-icons` 1.11.3. Bootstrap and icon CSS in `angular.json`, then `styles.css` (copy of `prototype.css` without prototype-only rules, D58). Font link in `index.html` (D57). `@angular/localize/init` in polyfills. No `bootstrap.bundle.js`. Build clean, with a bundle budget warning and a Bootstrap `.form-floating` selector warning.
+   3. Next: core models, token storage, `AuthService`.
 
 ## Open problems
 
