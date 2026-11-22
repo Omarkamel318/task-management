@@ -6,9 +6,9 @@ The slice plan is in [slices.md](slices.md).
 
 ## Current slice
 
-**Slice 0. Walking skeleton.** Planning the build.
+**Slice 0. Walking skeleton.** Backend done. Frontend next.
 Q1 to Q5 answered (D28 to D31, D35). Lessons part 1 done. Lessons parts 2 and 3 skipped (D42).
-Pre-build answers: D36 to D47. Tests paused (D48). No code yet.
+Pre-build answers: D36 to D47. Tests paused (D48). Backend part done (tasks 1 to 10). Frontend part not started.
 Backend tasks restated and confirmed by Omar on 2026-11-18.
 
 ## Finished slices
@@ -30,8 +30,9 @@ None yet.
    6. Done: password policy (D53) with `LetterPasswordValidator`. `JwtOptions` (validated on start, `Jwt:Key` in user-secrets, issuer and audience in `appsettings.json`), `TokenService` (claims `sub`, `email`, `name`, `role`, `jti`, 8 hours), `AuthService.SignInAsync`, `CurrentUser` in Api. `UserInfo` changed to init properties so EF can filter and page `IAppDbContext.Users`.
    7. Done: JwtBearer (issuer, audience, key, HS256 only, lifetime, `MapInboundClaims = false`), fallback policy (sign-in required, also on unknown routes), CORS any origin (D54), HTTPS redirect and HSTS outside Development, `GlobalExceptionHandler` and `UseStatusCodePages` (D55), `ValidationFilter`.
    8. Done: `AuthController` with `POST /api/auth/sign-in` (`[AllowAnonymous]`, 401 ProblemDetails on wrong credentials) and `GET /api/auth/me`. `UserService.GetByIdAsync` in Application reads `IAppDbContext.Users`. Smoke test: 200, 401, 400, 401, 200, 404.
-   9. Manual check of sign-in and `/me` (200, 401, 401).
-3. Then the Slice 0 frontend.
+   9. Done (skipped by Omar on 2026-11-22). Covered by the task 8 smoke test: sign-in 200 with a token, wrong password 401, `/me` without a token 401.
+   10. Done: Swagger (D56) at `https://localhost:7100/swagger`, Development only.
+3. Backend part of Slice 0 is done. Next: the Slice 0 frontend.
 
 ## Open problems
 
