@@ -278,6 +278,7 @@ a { text-underline-offset: 2px; }
   border-radius: 6px;
 }
 .tm-user-btn:hover { background: var(--tm-surface-2); }
+.tm-user-btn.dropdown-toggle::after { display: none; }
 .tm-avatar {
   width: 32px;
   height: 32px;
@@ -555,7 +556,7 @@ a { text-underline-offset: 2px; }
 
 
 @media (max-width: 991.98px) {
-  .tm-app { grid-template-columns: minmax(0, 1fr); }
+  .tm-app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 1fr; }
   .tm-side-col { position: static; height: auto; border: 0; background: transparent; }
   .tm-topbar { padding: 0 12px 0 8px; }
   .tm-main { padding: 20px 16px 120px; }
