@@ -8,7 +8,7 @@ The slice plan is in [slices.md](slices.md).
 
 **Slice 0. Walking skeleton.** Backend done. Frontend next.
 Q1 to Q5 answered (D28 to D31, D35). Lessons part 1 done. Lessons parts 2 and 3 skipped (D42).
-Pre-build answers: D36 to D47. Tests paused (D48). Backend part done (tasks 1 to 10). Frontend part in progress (tasks 1 to 4 of 8 done).
+Pre-build answers: D36 to D47. Tests paused (D48). Backend part done (tasks 1 to 10). Frontend part in progress (tasks 1 to 5 of 8 done).
 Backend tasks restated and confirmed by Omar on 2026-11-18.
 
 ## Finished slices
@@ -38,7 +38,8 @@ None yet.
    2. Done: `bootstrap` 5.3.3, `@ng-bootstrap/ng-bootstrap` 16.0.0, `@popperjs/core` 2.11.8, `@angular/localize` 17.3.12, `bootstrap-icons` 1.11.3. Bootstrap and icon CSS in `angular.json`, then `styles.css` (copy of `prototype.css` without prototype-only rules, D58). Font link in `index.html` (D57). `@angular/localize/init` in polyfills. No `bootstrap.bundle.js`. Build clean, with a bundle budget warning and a Bootstrap `.form-floating` selector warning.
    3. Done: `core/models` (`User`, `Role`, `SignInRequest`, `AuthResponse`). `TokenStorageService` (one localStorage key `tm-auth` with token and `expiresAt`, D39). `AuthService` with read-only signals `token`, `currentUser`, `isSignedIn`, plus `hasValidToken()`, `signIn()`, `loadCurrentUser()`, `signOut()`. `provideHttpClient()` in `app.config.ts`. Loading `/me` at app start moved to task 4 (needs the auth interceptor). Build clean.
    4. Done: `ProblemDetails` model, `ApiError` and `toApiError()`. `authInterceptor` (Bearer only for `environment.apiUrl`). `errorInterceptor` (401 except sign-in: sign out and go to `/sign-in?expired=true&returnUrl=`; 403, network, and 5xx: danger toast; always rethrows `ApiError`). Own `ToastService` and `ToastContainerComponent` with the prototype `.tm-toast` look (not `NgbToast`). `AppComponent` is `<router-outlet />` plus the toast container. `APP_INITIALIZER` loads `/me` when a valid token is stored, clears an expired one. Build clean.
-   5. Next: `authGuard`, `guestGuard`, routes.
+   5. Done: `authGuard` (`canActivate` and `canActivateChild`; no valid token: sign out, go to `/sign-in?returnUrl=`, plus `expired=true` when a token existed). `guestGuard` (signed in: go to `/`). Routes: `sign-in`, shell with home (`''`) and not-found (`**`), all lazy with `loadComponent` and a tab title. Stub components for sign-in, shell, home, not-found (filled in tasks 6 to 8). Build clean. Note: the production build needs internet, because it inlines the Google Fonts CSS.
+   6. Next: sign-in page.
 
 ## Open problems
 
