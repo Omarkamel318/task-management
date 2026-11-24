@@ -1,14 +1,14 @@
 # Status
 
-Last updated: 2026-11-19
+Last updated: 2026-11-23
 
 The slice plan is in [slices.md](slices.md).
 
 ## Current slice
 
-**Slice 0. Walking skeleton.** Backend done. Frontend next.
+**Slice 0. Walking skeleton.** Backend done. Frontend done. Waiting for Omar's browser check of the "Done when" lines.
 Q1 to Q5 answered (D28 to D31, D35). Lessons part 1 done. Lessons parts 2 and 3 skipped (D42).
-Pre-build answers: D36 to D47. Tests paused (D48). Backend part done (tasks 1 to 10). Frontend part in progress (tasks 1 to 7 of 8 done).
+Pre-build answers: D36 to D47. Tests paused (D48). Backend part done (tasks 1 to 10). Frontend part done (tasks 1 to 8).
 Backend tasks restated and confirmed by Omar on 2026-11-18.
 
 ## Finished slices
@@ -40,8 +40,9 @@ None yet.
    4. Done: `ProblemDetails` model, `ApiError` and `toApiError()`. `authInterceptor` (Bearer only for `environment.apiUrl`). `errorInterceptor` (401 except sign-in: sign out and go to `/sign-in?expired=true&returnUrl=`; 403, network, and 5xx: danger toast; always rethrows `ApiError`). Own `ToastService` and `ToastContainerComponent` with the prototype `.tm-toast` look (not `NgbToast`). `AppComponent` is `<router-outlet />` plus the toast container. `APP_INITIALIZER` loads `/me` when a valid token is stored, clears an expired one. Build clean.
    5. Done: `authGuard` (`canActivate` and `canActivateChild`; no valid token: sign out, go to `/sign-in?returnUrl=`, plus `expired=true` when a token existed). `guestGuard` (signed in: go to `/`). Routes: `sign-in`, shell with home (`''`) and not-found (`**`), all lazy with `loadComponent` and a tab title. Stub components for sign-in, shell, home, not-found (filled in tasks 6 to 8). Build clean. Note: the production build needs internet, because it inlines the Google Fonts CSS.
    6. Done: sign-in page from `sign-in.html`. Reactive form with the same rules as `SignInRequestValidator`. Field messages, 401 banner, server 400 field messages, "Signing in" spinner, "session ended" banner on `expired=true`, safe `returnUrl` (only paths starting with one `/`). Shared `BrandMarkComponent` (logo SVG). Build clean.
-   7. Done: `ThemeService` (`theme` signal, saved choice in `tm-theme` or the OS setting, `effect()` sets `data-bs-theme`), created in `AppComponent`. Shell from the prototype: sidebar (brand, empty nav, "Signed in as {role}"), top bar (theme button, `NgbDropdown` user menu with initials, name, role, Sign out). Mobile sidebar with Bootstrap `offcanvas-lg` CSS, a `menuOpen` signal, and a backdrop. Closes on Escape, backdrop, or page change. Home page "Welcome, {name}" with an empty panel. Build clean.
-   8. Next: not-found page, full check of the "Done when" lines.
+   7. Done: `ThemeService` (`theme` signal, saved choice in `tm-theme` or the OS setting, `effect()` sets `data-bs-theme`), created in `AppComponent`. Shell from the prototype: sidebar (brand, empty nav, "Signed in as {role}"), top bar (theme button, `NgbDropdown` user menu with initials, name, role, Sign out). Mobile sidebar with Bootstrap `offcanvas-lg` CSS, a `menuState` signal (closed, open, closing) for a smooth slide out, and a fading backdrop. Closes on Escape, backdrop, or page change. Fixed the gap above the mobile top bar (`grid-template-rows: auto 1fr`). Home page "Welcome, {name}" with an empty panel. Build clean.
+   8. Done: not-found page from `not-found.html` (404 view) inside the shell, button "Go to Home" (Projects come in Slice 4). 403 and network views are toasts (task 4). Smoke check: API wrong password 401, `/me` without token 401, CORS preflight from `http://localhost:4200` allowed, dev server serves the app. Build clean.
+5. Frontend part of Slice 0 is done. Next: Omar checks every "Done when" line in the browser. Then Slice 0 moves to Finished slices and Omar commits and merges. Then Slice 1.
 
 ## Open problems
 
@@ -49,7 +50,11 @@ None yet.
 
 | # | Question |
 |---|---|
-| | None. |
+| S0-7 | Refresh gap: when `/me` returns 401 at app start (token rejected but date still valid), the "session ended" banner is lost. `returnUrl` is still right. Rare. Fix later if needed. |
+| S0-8 | Bundle budget warning: about 570 kB against the 500 kB default (Bootstrap CSS). Transfer size about 105 kB. Raise the warning in `angular.json` or leave it. |
+| S0-9 | The production build needs internet, because it inlines the Google Fonts CSS (D57). Turn off font inlining or self-host the font if a build server has no internet. |
+| S0-10 | `decisions.md` has the D54 row twice. Remove one when Omar agrees. |
+| S0-11 | Network errors show as a toast. The prototype shows a banner at the top of the page. Change later if wanted. |
 
 ### Resolved
 
