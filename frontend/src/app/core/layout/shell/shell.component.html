@@ -1,0 +1,63 @@
+<div class="tm-app">
+  <div class="tm-side-col">
+    <div class="offcanvas-lg offcanvas-start tm-sidebar" id="tmSidebar" tabindex="-1" aria-labelledby="tmSidebarLabel"
+         [class.show]="menuState() !== 'closed'" [class.hiding]="menuState() === 'closing'">
+      <div class="offcanvas-header">
+        <span class="fw-semibold" id="tmSidebarLabel">Menu</span>
+        <button type="button" class="btn-close" aria-label="Close menu" (click)="closeMenu()"></button>
+      </div>
+      <div class="offcanvas-body p-0">
+        <div class="tm-sidebar-inner">
+          <a class="tm-brand" routerLink="/">
+            <app-brand-mark />
+            <span>Task Management</span>
+          </a>
+          <nav aria-label="Main">
+            <ul class="tm-nav"></ul>
+          </nav>
+          <div class="tm-side-foot">Signed in as {{ user()?.role }}</div>
+        </div>
+      </div>
+    </div>
+    @if (menuState() !== 'closed') {
+      <div class="offcanvas-backdrop fade d-lg-none" [class.show]="menuOpen()" (click)="closeMenu()"></div>
+    }
+  </div>
+
+  <div class="tm-body">
+    <header class="tm-topbar">
+      <button class="tm-icon-btn d-lg-none" type="button" aria-label="Open menu" aria-controls="tmSidebar"
+              [attr.aria-expanded]="menuOpen()" (click)="openMenu()">
+        <i class="bi bi-list" aria-hidden="true"></i>
+      </button>
+      <a class="tm-brand d-lg-none p-0" routerLink="/">
+        <app-brand-mark />
+        <span class="visually-hidden">Task Management</span>
+      </a>
+      <span class="tm-spacer"></span>
+
+      <button class="tm-icon-btn" type="button" (click)="toggleTheme()"
+              [attr.aria-label]="isDark() ? 'Switch to light theme' : 'Switch to dark theme'">
+        <i class="bi" [class.bi-sun]="isDark()" [class.bi-moon]="!isDark()" aria-hidden="true"></i>
+      </button>
+
+      <div ngbDropdown placement="bottom-end">
+        <button class="tm-user-btn" type="button" ngbDropdownToggle>
+          <span class="tm-avatar">{{ initials() }}</span>
+          <span class="d-none d-sm-inline text-start lh-sm">
+            <span class="d-block fw-semibold">{{ user()?.fullName }}</span>
+            <span class="d-block tm-muted tm-small">{{ user()?.role }}</span>
+          </span>
+          <i class="bi bi-chevron-down tm-muted tm-small" aria-hidden="true"></i>
+        </button>
+        <div ngbDropdownMenu>
+          <button type="button" ngbDropdownItem (click)="signOut()">Sign out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="tm-main" id="main">
+      <router-outlet />
+    </main>
+  </div>
+</div>

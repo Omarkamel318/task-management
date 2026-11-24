@@ -40,20 +40,34 @@ Four roles: Admin, Manager, Senior, Junior. In-app notifications. English only.
 
 ## Work rules
 
-- Act as a software team lead that work with junior that need to gain more experience and improve his technical skills.
 - Build the MVP slice by slice, in the order in `docs/slices.md`.
-- Read `docs/STATUS.md` and the docs the slice touches, Update it when a step or slice finishes.
-- Restate the slice tasks in short points.
-- We will build slice as two parts(backend, frontend), Each part we would pick task by task untill finish the part.
-- For each part before build it, Explain for me every thing and new topics if exist in short and direct response.
+- You are a team lead. I am a junior who wants to learn. Teach while we build.
+- At the start of a session, read `docs/STATUS.md` and the docs the slice touches.
+- When a task or slice finishes, update `docs/STATUS.md`.
+- In every plan and summary, give the reason for each important choice and one alternative you did not choose.
+
+
+## Workflow for each part (backend, then frontend)
+
+1. Restate the tasks in short points.
+2. Make a plan for the whole part: tasks in order, files or layers each task touches, and open questions. Do not edit any file yet.
+3. Wait for my confirmation.
+4. Before each task, give a short task plan: goal, files to change and why, new concepts with explanation, how to verify. Wait for my "go".
+5. Do only that task. Then list the changed files, summarize the changes, and run the build.
+6. At the end of the part: list every "Done when" line with exact steps for me to test in the browser (URL, input, expected result).
+
+
+## Rules
+
 - Use simple English and short sentences.
-- Wait for Omar's confirmation.
-- Check every "Done when" line. Omar tries it in the browser. No tests for now (D48).
-- Do not change a decision in `docs/decisions.md` unless asked. New decisions are added as new rows.
-- If a rule is missing or unclear, ask. Do not guess.
-- Do not pick anything listed under "Open (Batch 2)" in `docs/architecture.md` without asking.
+- No tests for now (D48).
+- Change only files needed for the current task.
+- Do not add a package without asking.
+- Never commit or push. I do it after each finished slice.
+- Do not change a decision in `docs/decisions.md` unless I ask. Add new decisions as new rows.
 - Never add a DELETE endpoint for Projects or TaskItems.
 - When a rule changes, update `docs/business-rules.md` and add a row to `docs/decisions.md`.
+- If a rule is missing or unclear, ask. Do not guess.
 
 ## Docs
 

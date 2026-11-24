@@ -161,19 +161,6 @@ Paused for now (D48). No test projects yet. The plan below is for later.
 ## 13. Dev setup and hosting
 
 - Dev database: SQL Server installed locally, instance `.\MSSQLSERVER01`, Windows sign-in (D16, D44).
-- Migrations are applied by hand. Roles and the first Admin are seeded at startup in Development only (D46).
+- Migrations are applied by hand (D46). Roles and the first Admin are seeded at startup in every environment. Dev reads the Admin from user-secrets, production from env variables. Outside Development the Admin must change the password at first sign-in (D52).
 - Production: Docker containers (D17).
 
-## 14. Conventions
-
-- C#: PascalCase for types, methods, and properties. camelCase for locals and parameters. `I` prefix for interfaces. `Async` suffix for async methods.
-- Database: plural table names. `TaskItems` for tasks.
-- Angular: kebab-case file names. One feature folder per area under `features/`. App-wide services in `core/`. Reusable UI in `shared/`.
-- Production style code with no comments.
-
-## 15. Open (Batch 2)
-
-Not decided yet. Do not pick these without asking:
-
-- Angular unit test runner.
-- Production hosting details: container host, database server for production, HTTPS certificates, deploy steps.

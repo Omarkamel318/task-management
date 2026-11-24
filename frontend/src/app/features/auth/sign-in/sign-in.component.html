@@ -1,0 +1,51 @@
+<main class="tm-auth">
+  <div class="tm-auth-card">
+    <span class="tm-brand">
+      <app-brand-mark />
+      <span>Task Management</span>
+    </span>
+
+    @if (expired && !errorMessage()) {
+      <div class="tm-banner is-info" role="status">
+        <i class="bi bi-clock-history" aria-hidden="true"></i>
+        <div>Your session ended. Sign in again to continue.</div>
+      </div>
+    }
+
+    <h1>Sign in</h1>
+
+    @if (errorMessage(); as message) {
+      <div class="tm-banner is-danger" role="alert">
+        <i class="bi bi-exclamation-octagon" aria-hidden="true"></i>
+        <div>{{ message }}</div>
+      </div>
+    }
+
+    <form class="tm-panel tm-panel-pad" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+      <div class="mb-3">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-control" id="email" type="email" autocomplete="username" formControlName="email"
+               [class.is-invalid]="fieldError('email')" [attr.aria-describedby]="fieldError('email') ? 'emailError' : null">
+        @if (fieldError('email'); as message) {
+          <div class="invalid-feedback" id="emailError">{{ message }}</div>
+        }
+      </div>
+      <div class="mb-4">
+        <label class="form-label" for="password">Password</label>
+        <input class="form-control" id="password" type="password" autocomplete="current-password" formControlName="password"
+               [class.is-invalid]="fieldError('password')" [attr.aria-describedby]="fieldError('password') ? 'passwordError' : 'passwordHelp'">
+        @if (fieldError('password'); as message) {
+          <div class="invalid-feedback" id="passwordError">{{ message }}</div>
+        }
+        <div class="form-text" id="passwordHelp">Forgot your password? Ask your Admin to reset it.</div>
+      </div>
+      @if (submitting()) {
+        <button class="btn btn-primary w-100" type="button" disabled>
+          <span class="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>Signing in
+        </button>
+      } @else {
+        <button class="btn btn-primary w-100" type="submit">Sign in</button>
+      }
+    </form>
+  </div>
+</main>
