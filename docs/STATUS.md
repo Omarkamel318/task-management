@@ -7,7 +7,7 @@ The slice plan is in [slices.md](slices.md).
 ## Current slice
 
 **Slice 1. Forced password change.** Not started. Next: restate the backend tasks and plan the backend part.
-Slice 0 is finished. Omar merges `slice-00-walking-skeleton` into `main`, then starts a new branch for Slice 1 (D47 pattern).
+Slice 0 is finished. Omar merges `chore/walking-skeleton` into `main`, then starts `feature/forced-password-change` for Slice 1 (D60).
 
 ## Finished slices
 
@@ -46,7 +46,8 @@ Backend tasks restated and confirmed by Omar on 2026-11-18.
    7. Done: `ThemeService` (`theme` signal, saved choice in `tm-theme` or the OS setting, `effect()` sets `data-bs-theme`), created in `AppComponent`. Shell from the prototype: sidebar (brand, empty nav, "Signed in as {role}"), top bar (theme button, `NgbDropdown` user menu with initials, name, role, Sign out). Mobile sidebar with Bootstrap `offcanvas-lg` CSS, a `menuState` signal (closed, open, closing) for a smooth slide out, and a fading backdrop. Closes on Escape, backdrop, or page change. Fixed the gap above the mobile top bar (`grid-template-rows: auto 1fr`). Home page "Welcome, {name}" with an empty panel. Build clean.
    8. Done: not-found page from `not-found.html` (404 view) inside the shell, button "Go to Home" (Projects come in Slice 4). 403 and network views are toasts (task 4). Smoke check: API wrong password 401, `/me` without token 401, CORS preflight from `http://localhost:4200` allowed, dev server serves the app. Build clean.
 5. Frontend part of Slice 0 is done. Omar checked every "Done when" line in the browser on 2026-11-24. All pass. Slice 0 finished.
-6. Next: Omar merges `slice-00-walking-skeleton` into `main` and creates the Slice 1 branch. Then Slice 1 backend: restate tasks and plan.
+6. Branch naming changed to `<type>/<slice-name>` (D60). Slice 0 branch renamed to `chore/walking-skeleton` on 2026-11-24.
+7. Next: Omar merges `chore/walking-skeleton` into `main` and creates `feature/forced-password-change`. Then Slice 1 backend: restate tasks and plan.
 
 ## Open problems
 
@@ -69,7 +70,7 @@ Backend tasks restated and confirmed by Omar on 2026-11-18.
 | S0-2 | `.\MSSQLSERVER01` with Windows sign-in (D44). |
 | S0-3 | No lockout for now (D45). |
 | S0-4 | Migrations by hand. Seed in Development only (D46). |
-| S0-5 | Docs on `main`, then branch `slice-00-walking-skeleton` (D47). |
+| S0-5 | Docs on `main`, then branch `slice-00-walking-skeleton` (D47). Branch renamed to `chore/walking-skeleton` (D60). |
 | Q5 | `IAuthService` and `ITokenService` in Application, implemented in Infrastructure. Reads through `IQueryable<UserInfo>` on `IAppDbContext` (D35). |
 | Q1 | Identity user class in Infrastructure (D28). |
 | Q2 | First Admin from dev user-secrets (D29). |
